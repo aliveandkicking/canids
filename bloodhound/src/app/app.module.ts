@@ -3,7 +3,10 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
+import { DayModule } from './day/day.module';
+
 import { AppComponent } from './app.component';
+import { CoreService } from './services/core.service';
 
 @NgModule({
   declarations: [
@@ -12,9 +15,10 @@ import { AppComponent } from './app.component';
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule
+    HttpModule,
+    DayModule
   ],
-  providers: [],
+  providers: [CoreService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
