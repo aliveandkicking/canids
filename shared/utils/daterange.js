@@ -1,4 +1,4 @@
-import {dateUtils} from '../utils/dateutils'
+import {dateUtils} from './dateutils'
 
 class DateRange {
   constructor (date = new Date()) {

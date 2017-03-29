@@ -1,3 +1,5 @@
 export declare class DayViewModel{
-    getTasks(): string[];
+    getTasksIds(): number[];
+    getTaskNameById(id: number): string;
+    setDate(date: Date): void;
 }

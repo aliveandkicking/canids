@@ -1,8 +1,20 @@
-import { TaskModel } from './task.model'
+import TaskModel, {tasksTemp} from './task.model'
 
 export default class DayModel {
   constructor() {
-    this.tasks = ['1', '2', '45']
+    this.tasks = []
+  }
+
+  setDate(date) {
+    if (!date) { 
+      return
+    }
+
+    this.retrieveTasks();
+  }
+
+  retrieveTasks() {
+    this.tasks = tasksTemp;    
   }
 
 }

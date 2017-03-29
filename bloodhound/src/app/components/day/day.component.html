@@ -2,9 +2,9 @@
   day works!
 </p>
 <ul>
-  <li *ngFor="let task of getTasks()">
-    <task
-     [name]="task"
+  <li *ngFor="let id of getTasksIds()">
+    <task    
+     [name]="getTaskNameById(id)"
     >
     </task>      
   </li>

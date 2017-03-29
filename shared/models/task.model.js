@@ -1,11 +1,16 @@
-import { DateRangeArray } from './daterange.model'
+import { DateRangeArray } from '../utils/daterange'
 
 export default class TaskModel {
     
   constructor (needGenerateTaskId = true) {
-    this.id = needGenerateTaskId ? Task.generateTaskId() : 0
+    this.id = needGenerateTaskId ? TaskModel._generateTaskId() : 0
     this.name = 'simple task'
     this.dates = new DateRangeArray()
+  }
+
+  setName(name) {
+    this.name = name
+    return this
   }
 
   clone () {
@@ -18,9 +23,17 @@ export default class TaskModel {
     return result
   }
 
-  static generateTaskId () {
-    return ++Task.prototype.maxId
+  static _generateTaskId () {
+    return ++TaskModel.prototype.maxId
   }
 }
 
 TaskModel.prototype.maxId = 0
+
+//biktop
+export const tasksTemp = [
+  new TaskModel().setName('do smth'),
+  new TaskModel().setName('save the world'),
+  new TaskModel().setName('cure cancer'),
+  new TaskModel().setName('kill hope')
+]
