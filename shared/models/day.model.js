@@ -1,26 +1,8 @@
-// import {DateRangeArray} from './daterangearray'
+import { TaskModel } from './task.model'
 
-// export default class Task {
-    
-//   constructor (needGenerateTaskId = true) {
-//     this.id = needGenerateTaskId ? Task.generateTaskId() : 0
-//     this.name = 'simple task'
-//     this.dates = new DateRangeArray()
-//   }
+export default class DayModel {
+  constructor() {
+    this.tasks = ['1', '2', '45']
+  }
 
-//   clone () {
-//     let result = new Task(false)
-//     result.id = this.id
-//     result.name = this.name
-//     for (let i = 0; i < this.dates.length; i++) {
-//       result.dates.push(this.dates[i].clone())
-//     }
-//     return result
-//   }
-
-//   static generateTaskId () {
-//     return ++Task.prototype.maxId
-//   }
-// }
-
-// Task.prototype.maxId = 0
+}

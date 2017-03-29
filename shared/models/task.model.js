@@ -1,6 +1,6 @@
-import {DateRangeArray} from './daterangearray'
+import { DateRangeArray } from './daterange.model'
 
-export default class Task {
+export default class TaskModel {
     
   constructor (needGenerateTaskId = true) {
     this.id = needGenerateTaskId ? Task.generateTaskId() : 0
@@ -23,4 +23,4 @@ export default class Task {
   }
 }
 
-Task.prototype.maxId = 0
+TaskModel.prototype.maxId = 0
