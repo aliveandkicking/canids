@@ -1,6 +1,7 @@
 export const dateUtils = {
 
   MILISECONDS_IN_DAY: 24 * 60 * 60 * 1000,
+  DAYS_IN_WEEK: 7,
 
   sameDay: function (dateOne, dateTwo) {
     return ((dateOne.getDate() === dateTwo.getDate()) &&
@@ -26,5 +27,14 @@ export const dateUtils = {
 
   incDay (date) {
     return new Date(date.getTime() + dateUtils.MILISECONDS_IN_DAY)
+  },
+
+  getStartOfMonth(date) {
+    return new Date(dateOne.getFullYear(), dateOne.getMonth(), 1)
+  },
+
+  mondayBasedDayOfWeek(date) {
+    return (date.getDay() == 0 ? 6 : (date.getDay() - 1))
   }
+
 }

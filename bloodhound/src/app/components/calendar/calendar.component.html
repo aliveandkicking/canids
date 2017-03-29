@@ -1,0 +1,13 @@
+<p>
+  calendar works!
+</p>
+
+<table>
+  <tr *ngFor="let week of getCurrentDates()">
+    <td *ngFor="let day of week">
+      {{day.getDate}}      
+    </td>
+  </tr>
+</table>   
+
+
