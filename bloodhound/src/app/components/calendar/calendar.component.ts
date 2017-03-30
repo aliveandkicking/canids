@@ -13,13 +13,18 @@ import { CalendarViewModel } from '../../../../../shared/viewmodels/calendar.vie
 })
 export class CalendarComponent implements OnInit {
   constructor(
-    @Inject(CreateViewModelToken) private viewModel: CalendarViewModel 
+    @Inject(CreateViewModelToken) private viewModel: CalendarViewModel
   ) { }
 
   ngOnInit() {
   }
 
   getCurrentDates(): Date[][]{
-    return this.viewModel.getCurrentDates() 
-    }
+    return this.viewModel.getCurrentDates()
   }
+
+  getDayNames(): string[] {
+    return this.viewModel.getDaysNames()
+  }
+
+}
