@@ -2,17 +2,50 @@
   calendar works!
 </p>
 
-<table>  
+{{getCurrentYear()}}
+
+<div> 
+  <button (click)="onPrev()">  
+    prev
+  </button>
+
+  <button (click)="showMonths()">      
+    {{getMonthName()}}
+  </button>
   
+  <button (click)="onNext()">  
+    next
+  </button>
+</div>
+
+
+<table *ngIf="!isMonthMode()">    
+
   <tr>
-    <td *ngFor="let dayName of getDayNames()">
-      {{dayName}}
+    <td *ngFor="let weekDay of getWeekDays()"
+      (click)="onDayOfWeekClick(weekDay.index)"
+      [ngClass]="['calendar-cell']"
+    >
+      {{weekDay.name}}
     </td>
   </tr>
 
   <tr *ngFor="let week of getCurrentDates()">
-    <td *ngFor="let day of week">
+    <td *ngFor="let day of week" 
+      (click)="onDayClick(day)"
+      [ngClass]="getCellClass(day)"
+    >
       {{day.getDate()}}
+    </td>
+  </tr>
+
+</table>   
+
+<table *ngIf="isMonthMode()">    
+
+  <tr *ngFor="let row of getMonths()">
+    <td *ngFor="let month of row" (click)="onMonthClick(month.index)">
+      {{month.name}}
     </td>
   </tr>
 

@@ -6,7 +6,7 @@ import { CalendarViewModel } from '../../../../../shared/viewmodels/calendar.vie
   selector: 'calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css'],
-  providers: [{ 
+  providers: [{
       provide: CreateViewModelToken,
       useValue: createViewModel(CalendarViewModel)
   }]
@@ -20,11 +20,59 @@ export class CalendarComponent implements OnInit {
   }
 
   getCurrentDates(): Date[][]{
-    return this.viewModel.getCurrentDates()
+    return this.viewModel.getCurrentDates();
   }
 
-  getDayNames(): string[] {
-    return this.viewModel.getDaysNames()
+  getWeekDays(): {index: number; name: string}[][] {
+    return this.viewModel.getWeekDays();
+  }
+
+  onNext(): void {
+    this.viewModel.next();
+  }
+
+  onPrev(): void {
+    this.viewModel.prev();
+  }
+
+  getMonthName() {
+    return this.viewModel.getCurrentMonthName();
+  }
+
+  getCurrentYear(): number {
+    return this.viewModel.getCurrentYear();
+  }
+
+  showMonths(): void {
+    this.viewModel.setMonthMode(true);
+  }
+
+  getMonths(): {index: number; name: string}[][] {
+    return this.viewModel.getMonths();
+  }
+
+  isMonthMode(): boolean {
+    return this.viewModel.isMonthMode();
+  }
+
+  onDayClick(date: Date) {
+    this.viewModel.dateActivated(date);
+  }
+
+  onMonthClick(monthNumber: number) {
+    this.viewModel.monthActivated(monthNumber);
+  }
+
+  onDayOfWeekClick(dayOfWeekNumber: number) {
+    this.viewModel.dayOfWeekActivated(dayOfWeekNumber);
+  }
+
+  dateIsSelected(date) {
+    return this.viewModel.dateIsSelected(date);
+  }
+
+  getCellClass(date): string {
+    return this.viewModel.dateIsSelected(date) ? 'calendar-cell calendar-cell-selected' : 'calendar-cell';
   }
 
 }
