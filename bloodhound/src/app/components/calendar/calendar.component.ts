@@ -35,7 +35,7 @@ export class CalendarComponent implements OnInit {
     this.viewModel.prev();
   }
 
-  getMonthName() {
+  getMonthName(): string {
     return this.viewModel.getCurrentMonthName();
   }
 
@@ -55,23 +55,23 @@ export class CalendarComponent implements OnInit {
     return this.viewModel.isMonthMode();
   }
 
-  onDayClick(date: Date) {
+  onDayClick(date: Date): void {
     this.viewModel.dateActivated(date);
   }
 
-  onMonthClick(monthNumber: number) {
+  onMonthClick(monthNumber: number): void {
     this.viewModel.monthActivated(monthNumber);
   }
 
-  onDayOfWeekClick(dayOfWeekNumber: number) {
+  onDayOfWeekClick(dayOfWeekNumber: number): void {
     this.viewModel.dayOfWeekActivated(dayOfWeekNumber);
   }
 
-  dateIsSelected(date) {
-    return this.viewModel.dateIsSelected(date);
+  getWeekDayCellClass(weekDay: number): string {
+    return this.viewModel.weekDayIsSelected(weekDay) ? 'calendar-cell calendar-cell-selected' : 'calendar-cell';
   }
 
-  getCellClass(date): string {
+  getDayCellClass(date: Date): string {
     return this.viewModel.dateIsSelected(date) ? 'calendar-cell calendar-cell-selected' : 'calendar-cell';
   }
 

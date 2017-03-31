@@ -118,15 +118,15 @@ export class CalendarViewModel{
     }
   }
 
-  dateIsSelected(date) {    
+  dateIsSelected(date) {
     return( 
       (this._selectedDates.indexOf(date.getTime()) >= 0) || 
-      (this.weekDayIsSelected(this._model.getWeekDayIndex(date.getDay())) >= 0)
+      (this.weekDayIsSelected(this._model.getWeekDayIndex(date.getDay())))
     )
   }
 
   weekDayIsSelected(weekDay) {
-    return this._selectedWeekDays.indexOf(weekDay) >= 0
+    return (this._selectedWeekDays.indexOf(weekDay) >= 0);
   }
 
   monthActivated(month) {

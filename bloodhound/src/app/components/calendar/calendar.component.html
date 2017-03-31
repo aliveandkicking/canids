@@ -24,7 +24,7 @@
   <tr>
     <td *ngFor="let weekDay of getWeekDays()"
       (click)="onDayOfWeekClick(weekDay.index)"
-      [ngClass]="['calendar-cell']"
+      [ngClass]="getWeekDayCellClass(weekDay.index)"
     >
       {{weekDay.name}}
     </td>
@@ -33,7 +33,7 @@
   <tr *ngFor="let week of getCurrentDates()">
     <td *ngFor="let day of week" 
       (click)="onDayClick(day)"
-      [ngClass]="getCellClass(day)"
+      [ngClass]="getDayCellClass(day)"
     >
       {{day.getDate()}}
     </td>
