@@ -1,16 +1,24 @@
-import { DateRangeArray } from '../utils/daterange'
+import { RepeatRulesModel } from './repeat-rules.model';
 
-export default class TaskModel {
-    
+export default class TaskModel {    
   constructor (needGenerateTaskId = true) {
     this.id = needGenerateTaskId ? TaskModel._generateTaskId() : 0
-    this.name = 'simple task'
-    this.dates = new DateRangeArray()
+    this.name = 'simple task'    
+    this.date = new Date()    
+    this.repeatRules = null
   }
 
   setName(name) {
     this.name = name
     return this
+  }
+
+  setRepeat(repeat) {
+    if (repeat) {
+      this.repeatRules = new RepeatRulesModel()      
+    } else {
+      this.repeatRules = null
+    }
   }
 
   clone () {

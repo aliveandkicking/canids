@@ -5,7 +5,9 @@ export const dateUtils = {
   JANUARY_INDEX: 0,
   DECEMBER_INDEX: 11,
   MONTH_NAMES: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-  MONTH_NAMES_SHORT: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+  MONTH_NAMES_SHORT: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],   
+  SU: 0, MO: 1, TU: 2, WE: 3, TH: 4, FR: 5, SA: 6,
+  MO_TILL_FR: [1, 2, 3, 4, 5],
 
   sameDay: function (dateOne, dateTwo) {
     return ((dateOne.getDate() === dateTwo.getDate()) &&
@@ -29,8 +31,8 @@ export const dateUtils = {
     return new Date(date.getTime() - dateUtils.MILISECONDS_IN_DAY)
   },
 
-  incDay (date) {
-    return new Date(date.getTime() + dateUtils.MILISECONDS_IN_DAY)
+  incDay (date, numberOfDays = 1) {
+    return new Date(date.getTime() + (dateUtils.MILISECONDS_IN_DAY * numberOfDays))
   },
 
   getStartOfMonth(date) {
@@ -44,5 +46,16 @@ export const dateUtils = {
   mondayBasedDayOfWeek(date) {
     return dateUtils.mondayBasedDayOfWeekIdx(date.getDay())
   },
+
+  getDaysBetween(startDate, endDate) {
+    return Math.floor(
+      (startDate.getTime() - endDate.getTime()) / dateUtils.MILISECONDS_IN_DAY)
+  },
+
+  clearTime(date) {
+    let days = Math.floor(date.getTime() / dateUtils.MILISECONDS_IN_DAY)
+    return new Date(days * dateUtils.MILISECONDS_IN_DAY)
+  }
+
 
 }
