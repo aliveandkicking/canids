@@ -13,8 +13,8 @@ export class CalendarViewModel{
     this._numberOfWeeksOnPage = 6
     this._numberOfMonthColumnsOnPage = 4
 
-    this._selectedDates = []
-    this._selectedWeekDays = []
+    this._onCheckIfDateIsSelected = null   
+    this._onDateActivated = null    
   } 
 
   getCurrentYear() {
@@ -106,45 +106,26 @@ export class CalendarViewModel{
   }
 
   dateActivated(date) {    
-    if (!date) {
-      return
-    }
-
-    const index = this._selectedDates.indexOf(date.getTime())
-    if (index >= 0) {
-      this._selectedDates.splice(index, 1)      
-    } else {
-      this._selectedDates.push(date.getTime())
+    if (this._onDateActivated) {
+      this._onDateActivated(date)
     }
   }
 
   dateIsSelected(date) {
-    return( 
-      (this._selectedDates.indexOf(date.getTime()) >= 0) || 
-      (this.weekDayIsSelected(this._model.getWeekDayIndex(date.getDay())))
-    )
-  }
-
-  weekDayIsSelected(weekDay) {
-    return (this._selectedWeekDays.indexOf(weekDay) >= 0);
-  }
+    return(
+      this._onCheckIfDateIsSelected ? this._onCheckIfDateIsSelected(date) : false)
+  } 
 
   monthActivated(month) {
     this.setCurrentMonth(month)
     this.setMonthMode(false)
   }
 
-  dayOfWeekActivated(dayOfWeek) {
-    if (((!dayOfWeek) && (dayOfWeek != 0)) || 
-        (dayOfWeek >= dateUtils.DAYS_IN_WEEK)) {
-      return
-    }     
-    const index = this._selectedWeekDays.indexOf(dayOfWeek)
-    if (index >= 0) {
-      this._selectedWeekDays.splice(index, 1)      
-    } else {
-      this._selectedWeekDays.push(dayOfWeek)
-    }
+  setOnCheckIfDateIsSelected(event) {
+    this._onCheckIfDateIsSelected = event
   }
 
+  setOnDateActivated(event) {
+    this._onDateActivated = event
+  }
 }

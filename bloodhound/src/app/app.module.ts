@@ -8,6 +8,7 @@ import { DayComponent } from './components/day/day.component';
 import { TaskComponent } from './components/task/task.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { CreateTaskComponent } from './components/create-task/create-task.component';
+import { RepeatRulesComponent } from './components/repeat-rules/repeat-rules.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { CreateTaskComponent } from './components/create-task/create-task.compon
     DayComponent,
     TaskComponent,
     CalendarComponent,
-    CreateTaskComponent
+    CreateTaskComponent,
+    RepeatRulesComponent
   ],
   imports: [
     BrowserModule,

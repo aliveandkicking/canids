@@ -1,3 +1,16 @@
-<p>
-  create-task works!
-</p>
+<input type="text" placeholder="Task Name">
+<input type="date">
+
+
+
+<!--<div *ngIf="getRepeat()"> -->
+
+  <repeat-rules [viewModel]="getRepeatRulesViewModel()">
+    loading ...
+  </repeat-rules>
+
+
+<!--</div>-->
+
+
+

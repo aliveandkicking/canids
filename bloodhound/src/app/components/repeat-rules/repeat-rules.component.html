@@ -1,0 +1,29 @@
+<p>
+  repeat-rules works!
+</p>
+
+<select>
+  <option *ngFor="let mode of getRepeatModeList()" value="mode.id">
+    {{mode.name}}
+  <option>
+
+</select>
+
+<div> 
+  repeat every: 
+  <input type="text">
+</div>
+
+<div> 
+  starts on: 
+  <input type="text">
+</div>
+
+<div> 
+  ends: 
+  <input type="text">
+</div>
+
+<button (click)="doCheck()"> check </button>
+
+<calendar [onCheckIfDateIsSelected]="onCheckIfDateIsSelected">Loading ...</calendar>

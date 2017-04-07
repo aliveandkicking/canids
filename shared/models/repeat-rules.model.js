@@ -5,8 +5,9 @@ export const REPEAT_MODE = {
   DAILY: 1, 
   WEEKLY: 2,
   MONTHLY: 3,
-  YEARLY: 4
-}
+  YEARLY: 4,
+  ALLOWED: [0,1,2,3,4]  //biktop
+};
 
 class BaseRules {
   constructor(every = 1){
@@ -34,8 +35,8 @@ class YearlyRules extends BaseRules{}
 
 export class RepeatRulesModel {
   constructor() {
-    this._mode = REPEAT_MODE.DAILY;
-    this.dailyRules = new DailyRules()       
+    this._mode = REPEAT_MODE.NONE;
+    this.dailyRules = null       
     this.weeklyRules = null    
     this.monthlyRules = null    
     this.yearlyRules = null 
@@ -45,27 +46,42 @@ export class RepeatRulesModel {
     this.occurrenecsLimit = 0
     this._startDate = null
     this._endDate = null
+    this._mondayBased = true
   } 
+
+  setMondayBased(mondayBased) {
+    this._mondayBased = mondayBased
+  }
 
   setStartDate(date) {
     this._startDate = dateUtils.clearTime(date)
   }
 
-  setEnd(date) {
+  setEndDate(date) {
     this._endDate = dateUtils.clearTime(date)
   }
 
-  setRepeatMode(mode) {
-    if (this._mode = REPEAT_MODE.DAILY) {
-      return this._checkDailyRules()      
-    } else  if (this._mode = REPEAT_MODE.WEEKLY) {      
-      return this._checkWeeklyRules()
-    } else  if (this._mode = REPEAT_MODE.MONTHLY) {      
-      return this._checkMonthlyRules()
-    } else  if (this._mode = REPEAT_MODE.YEARLY) {      
-      return this._checkYearlyRules()    
-    } else  
+  getEndDate(date) {
+    return this._endDate
+  }
 
+  setRepeatMode(mode) {
+    if (REPEAT_MODE.ALLOWED.includes(mode)) {
+      this._mode = mode
+      if ((this._mode == REPEAT_MODE.DAILY) && (!this.dailyRules)) {
+        this.dailyRules = new DailyRules()
+      } else  if ((this._mode == REPEAT_MODE.WEEKLY) && (!this.weeklyRules)) {
+        this.weeklyRules = new WeeklyRules()
+      } else  if ((this._mode == REPEAT_MODE.MONTHLY) && (!this.monthlyRules)) {
+        this.monthlyRules = new MonthlyRules()
+      } else  if ((this._mode == REPEAT_MODE.YEARLY) && (!this.yearlyRules)){
+        this.yearlyRules = new YearlyRules()
+      }
+    }
+  }
+
+  getRepeatMode(){
+    return this._mode;  
   }
 
   _checkDailyRules(date) {
@@ -77,16 +93,25 @@ export class RepeatRulesModel {
     return false
   }
 
+  _getFirstDayOfWeek(date) {
+    let dayOfWeek = (this._mondayBased) ? 
+          dateUtils.mondayBasedDayOfWeek(date) : 
+          date.getDay()
+    return new Date(date.getTime() - (dateUtils.MILISECONDS_IN_DAY * dayOfWeek))
+  } 
+
   _checkWeeklyRules(date) {
-   if (this.weeklyRules) {
-      let weeks = 
-        ((date.getTime() - this._startDate.getTime()) / 
+    if (this.weeklyRules) {
+      let firstDayOfWeek = this._getFirstDayOfWeek(date)
+      let originFirstDayOfWeek = this._getFirstDayOfWeek(this._startDate)
+      let weeksPassed = 
+        ((firstDayOfWeek.getTime() - originFirstDayOfWeek.getTime()) / 
         (dateUtils.MILISECONDS_IN_DAY * dateUtils.DAYS_IN_WEEK))
 
-      if (days % this.weeklyRules.every == 0) {        
+      if (weeksPassed % this.weeklyRules.every == 0) {        
         return this.weeklyRules.weekDays.includes(date.getDay())        
       }
-    }
+    } 
     return false
   }
 
@@ -102,11 +127,11 @@ export class RepeatRulesModel {
       } else {
         return (date.getDate() === this._startDate.getDate())
       }
-    }
+    }//biktop
     return false
   } 
 
-  _checkYearlyRules(date) {
+  _checkYearlyRules (date) {
     if (this.yearlyRules) {
       return (
         (date.getDate() === this._startDate.getDate()) &&
@@ -123,7 +148,8 @@ export class RepeatRulesModel {
       if (date < this._startDate) {
         return false        
       }
-    } else if (this._endDate) {
+    }
+    if (this._endDate) {
       if (date > this._endDate) {
         return false        
       }
@@ -136,16 +162,18 @@ export class RepeatRulesModel {
       return false
     } 
     date = dateUtils.clearTime(date)
-    if (!this._checkPeriod(date)) {
+    if (date.getTime() == this._startDate.getTime()) {
+      return true      
+    } else if (!this._checkPeriod(date)) {
       return false
-    } else if (this_.mode = REPEAT_MODE.DAILY) {
-      return this._checkDailyRules()      
-    } else  if (this._mode = REPEAT_MODE.WEEKLY) {      
-      return this._checkWeeklyRules()
-    } else  if (this._mode = REPEAT_MODE.MONTHLY) {      
-      return this._checkMonthlyRules()
-    } else  if (this._mode = REPEAT_MODE.YEARLY) {      
-      return this._checkYearlyRules()    
+    } else if (this._mode == REPEAT_MODE.DAILY) {
+      return this._checkDailyRules(date)      
+    } else  if (this._mode == REPEAT_MODE.WEEKLY) {      
+      return this._checkWeeklyRules(date)
+    } else  if (this._mode == REPEAT_MODE.MONTHLY) {      
+      return this._checkMonthlyRules(date)
+    } else  if (this._mode == REPEAT_MODE.YEARLY) {      
+      return this._checkYearlyRules(date)    
     } else {
       return false
     }     

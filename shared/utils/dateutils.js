@@ -52,9 +52,12 @@ export const dateUtils = {
       (startDate.getTime() - endDate.getTime()) / dateUtils.MILISECONDS_IN_DAY)
   },
 
-  clearTime(date) {
-    let days = Math.floor(date.getTime() / dateUtils.MILISECONDS_IN_DAY)
-    return new Date(days * dateUtils.MILISECONDS_IN_DAY)
+  encodeDate(date) {
+    return [date.getFullYear(), date.getMonth(), date.getDate()]
+  },
+
+  clearTime(date) {    
+    return new Date(...dateUtils.encodeDate(date))
   }
 
 

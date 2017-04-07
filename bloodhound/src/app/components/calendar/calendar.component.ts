@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, Input } from '@angular/core';
 import { CreateViewModelToken, createViewModel } from '../../services/create-viewmodel.service';
 import { CalendarViewModel } from '../../../../../shared/viewmodels/calendar.viewmodel';
 
@@ -12,11 +12,16 @@ import { CalendarViewModel } from '../../../../../shared/viewmodels/calendar.vie
   }]
 })
 export class CalendarComponent implements OnInit {
+  @Input()onDateClick: (date: Date) => void = null;
+  @Input()onCheckIfDateIsSelected: (date: Date) => boolean = null;
+
   constructor(
     @Inject(CreateViewModelToken) private viewModel: CalendarViewModel
   ) { }
 
   ngOnInit() {
+    this.viewModel.setOnCheckIfDateIsSelected(this.onCheckIfDateIsSelected);
+    this.viewModel.setOnDateActivated(this.onDateClick);
   }
 
   getCurrentDates(): Date[][]{
@@ -68,7 +73,7 @@ export class CalendarComponent implements OnInit {
   }
 
   getWeekDayCellClass(weekDay: number): string {
-    return this.viewModel.weekDayIsSelected(weekDay) ? 'calendar-cell calendar-cell-selected' : 'calendar-cell';
+    return 'calendar-cell';
   }
 
   getDayCellClass(date: Date): string {

@@ -10,12 +10,14 @@ export declare class CalendarViewModel {
   setMonthMode(isMonthMode: boolean): void;
   isMonthMode(): boolean;
   dateIsSelected(date: Date): boolean; 
-
-  weekDayIsSelected(weekDay: number): boolean; 
+  
   dateActivated(date: Date): void;
   monthActivated(month: number): void;
   dayOfWeekActivated(dayOfWeek: number): void;
   
   next(): void;
   prev(): void;
+
+  setOnCheckIfDateIsSelected(event: (date: Date) => boolean): void;
+  setOnDateActivated(event: (date: Date) => void): void;
 }
