@@ -1,78 +1,91 @@
-import { RepeatRulesModel, REPEAT_MODE } from '../models/repeat-rules.model';
+import { REPEAT_MODE } from '../models/repeat-rules.model'
+import { dateUtils } from '../utils/dateutils'
 
 export class RepeatRulesViewModel {
-  constructor(repeatRulesModel) {
+  constructor (repeatRulesModel) {
     this._model = repeatRulesModel
+    this.mondayBased = true
   }
 
-  getMode() {
-    return this._model.getRepeatMode()   
+  getMode () {
+    return this._model.getRepeatMode()
   }
 
-  setMode(repeatMode) {
-    this._model.setRepeatMode(repeatMode)    
-  } 
+  setMode (repeatMode) {
+    this._model.setRepeatMode(repeatMode)
+  }
 
-  getRepeatModeList() {
-    return([      
-      {id: REPEAT_MODE.DAILY, name: 'Daily'},
-      {id: REPEAT_MODE.WEEKLY, name: 'Weekly'},
-      {id: REPEAT_MODE.MONTHLY, name: 'Monthly'},
-      {id: REPEAT_MODE.YEARLY, name: 'Yearly'}
+  getRepeatModeList () {
+    return ([
+      {id: REPEAT_MODE.ONCE, name: 'once', title: 'Once'},
+      {id: REPEAT_MODE.DAILY, name: 'daily', title: 'Daily'},
+      {id: REPEAT_MODE.WEEKLY, name: 'weekly', title: 'Weekly'},
+      {id: REPEAT_MODE.MONTHLY, name: 'monthly', title: 'Monthly'},
+      {id: REPEAT_MODE.YEARLY, name: 'yearly', title: 'Yearly'}
     ])
   }
 
-  _getCurrentModelMode() {
+  _getCurrentModelMode () {
     let mode = this._model.getRepeatMode()
-    if (mode == REPEAT_MODE.DAILY) {
+    if (mode === REPEAT_MODE.DAILY) {
       return this._model.dailyRules
-    } else  if (mode == REPEAT_MODE.WEEKLY) {
+    } else if (mode === REPEAT_MODE.WEEKLY) {
       return this._model.weeklyRules
-    } else  if (mode == REPEAT_MODE.MONTHLY) {
+    } else if (mode === REPEAT_MODE.MONTHLY) {
       return this._model.monthlyRules
-    } else  if (mode == REPEAT_MODE.YEARLY) {
+    } else if (mode === REPEAT_MODE.YEARLY) {
       return this._model.yearlyRules
-    }   
+    }
   }
 
-  getRepeatEvery() {
-    return this._getCurrentModelMode().every     
-  } 
-
-  setRepeatEvery(repeatEvery) {
-    this._getCurrentModelMode().every = repeatEvery      
-  } 
-
-  getOccurrenecsLimit() {
-    return this._model.occurrenecsLimit
+  getRepeatEvery () {
+    return this._getCurrentModelMode().every
   }
 
-  setOccurrenecsLimit(limit) {
-    this._model.occurrenecsLimit = limit
+  setRepeatEvery (repeatEvery) {
+    this._getCurrentModelMode().every = repeatEvery
   }
 
-  getEndDate() {
-    return this._model.getEndDate()
+  getStartDate () {
+    return this._model.getStartDate()
   }
 
-  setEndDate(date) {
-    this._model.setEndDate(date)
-  }
-
-  setStartDate(date) {
+  setStartDate (date) {
     this._model.setStartDate(date)
   }
 
-  getWeekDaysToRepeat() {    
-    if (this._model.getRepeatMode() === REPEAT_MODE.WEEKLY) {
-      if (this._model.weeklyRules) {
-        return [].concat(this._model.weeklyRules.weekDays)        
-      }
-    }
-    return []    
+  getEndDate () {
+    return this._model.getEndDate()
   }
 
-  setWeekDaysToRepeat(weekDays){    
+  setEndDate (date) {
+    this._model.setEndDate(date)
+  }
+
+  getNeverEnd () {
+    return this._model.neverEnd
+  }
+
+  setNeverEnd (neverEnd) {
+    this._model.neverEnd = neverEnd
+  }
+
+  getWeekDays () {
+    return this.mondayBased
+      ? dateUtils.DAYS_OF_WEEK_MONDAY_BASED
+      : dateUtils.DAYS_OF_WEEK
+  }
+
+  getWeekDaysToRepeat () {
+    if (this._model.getRepeatMode() === REPEAT_MODE.WEEKLY) {
+      if (this._model.weeklyRules) {
+        return [].concat(this._model.weeklyRules.weekDays)
+      }
+    }
+    return []
+  }
+
+  setWeekDaysToRepeat (weekDays) {
     if (this._model.getRepeatMode() === REPEAT_MODE.WEEKLY) {
       if ((this._model.weeklyRules) && (weekDays)) {
         this._model.weeklyRules.weekDays = [].concat(weekDays)
@@ -80,24 +93,30 @@ export class RepeatRulesViewModel {
     }
   }
 
-  getUseDayOfTheLastWeek() {
+  changeWeekDayToRepeat (weekDay) {
+    if (this._model.getRepeatMode() === REPEAT_MODE.WEEKLY) {
+      this._model.changeWeekDayToRepeat(weekDay)
+    }
+  }
+
+  getUseDayOfTheLastWeek () {
     if (this._model.getRepeatMode() === REPEAT_MODE.MONTHLY) {
       if (this._model.monthlyRules) {
-        return this._model.monthlyRules.dayOfTheLastWeek        
+        return this._model.monthlyRules.dayOfTheLastWeek
       }
     }
-    return false      
+    return false
   }
 
-  setUseDayOfTheLastWeek(useDayOfTheLastWeek) {
+  setUseDayOfTheLastWeek (useDayOfTheLastWeek) {
     if (this._model.getRepeatMode() === REPEAT_MODE.MONTHLY) {
       if (this._model.monthlyRules) {
-       this._model.monthlyRules.dayOfTheLastWeek = useDayOfTheLastWeek        
+        this._model.monthlyRules.dayOfTheLastWeek = useDayOfTheLastWeek
       }
-    }  
+    }
   }
 
-  containsDate(date) {
+  containsDate (date) {
     return this._model.containsDate(date)
   }
 

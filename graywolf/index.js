@@ -1,2 +1,4 @@
+require('./src/handlers/base.handler')
+require('./src/handlers/task-add.handler')
 
-require('./src/server').run()
+require('./src/server-ex').run()

@@ -1,16 +1,27 @@
-<input type="text" placeholder="Task Name">
-<input type="date">
+<div>
+  <input 
+    type="text" 
+    #taskName
+    [value]="getTaskName()"
+    placeholder="Task Name"
+    (input)="setTaskName(taskName.value)">
+</div>
 
-
-
-<!--<div *ngIf="getRepeat()"> -->
-
+<div>
   <repeat-rules [viewModel]="getRepeatRulesViewModel()">
     loading ...
   </repeat-rules>
+</div>
 
+<button
+  (click)="save()">
+  Submit
+</button>
 
-<!--</div>-->
+<button
+  (click)="cancel()">
+  Cancel
+</button>
 
 
 

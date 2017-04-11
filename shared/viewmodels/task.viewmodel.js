@@ -1,44 +1,42 @@
 import { TaskModel } from '../models/task.model';
-import { RepeatRulesModel, REPEAT_MODE } from '../models/repeat-rules.model';
+import { REPEAT_MODE } from '../models/repeat-rules.model';
 
 export class TaskViewModel {
-  constructor() {
+  constructor () {
     this._model = new TaskModel()
   }
 
-  getTaskName() {
+  getTaskName () {
     return this._model.name
   }
 
-  setTaskName(name) {
-    this._model.name = name;
+  setTaskName (name) {
+    this._model.name = name
   }
 
-  getStartDate() {
+  getStartDate () {
     return this._model.date
   }
 
-  setStartDate(date) {
-    this._model.date = date;
+  setStartDate (date) {
+    this._model.date = date
     if (this._model.repeatRules) {
       this._model.repeatRules.setStartDate(date)      
     }
 
   }
 
-  setRepeat(repeat) {
+  setRepeat (repeat) {
     this._model.setRepeat(repeat)
   }
 
-  getRepeatOptions() {
+  getRepeatOptions () {
     return [
       {name: 'Do not repeat', index: null},
       {name: 'Daily', index: REPEAT_MODE.DAILY},
       {name: 'Weekly', index: REPEAT_MODE.WEEKLY},
       {name: 'Monthly', index: REPEAT_MODE.MONTHLY},
-      {name: 'Yearly', index: REPEAT_MODE.YEARLY}    
+      {name: 'Yearly', index: REPEAT_MODE.YEARLY}
+    ]
   }
-
-  
-
 }

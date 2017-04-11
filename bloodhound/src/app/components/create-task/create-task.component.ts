@@ -19,15 +19,22 @@ export class CreateTaskComponent implements OnInit {
     @Inject(CreateViewModelToken) private viewModel: TaskCreateViewModel
   ) { }
 
-  ngOnInit() {
-  }
-
-  getRepeat(): boolean {
-    return this.viewModel.getRepeat() 
-  }
+  ngOnInit() { }
 
   getRepeatRulesViewModel(): RepeatRulesViewModel {
-    return this.viewModel.getRepeatRulesViewModel()
+    return this.viewModel.getRepeatRulesViewModel();
+  }
+
+  setTaskName(name: string): void {
+    this.viewModel.setTaskName(name);
+  }
+
+  getTaskName(): string {
+    return this.viewModel.getTaskName();
+  }
+
+  save() {
+    this.viewModel.save();
   }
 
 }

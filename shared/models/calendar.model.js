@@ -18,65 +18,54 @@ export class CalendarModel {
        [].concat(SUNDAY, STATITC_DAY_NAMES)
   }
 
-  getWeekDayIndex(weekDay) {
-    return this._mondayBased ? dateUtils.mondayBasedDayOfWeekIdx(weekDay) : weekDay      
+  getWeekDayIndex (weekDay) {
+    return this._mondayBased ? dateUtils.mondayBasedDayOfWeekIdx(weekDay) : weekDay
   }
 
-  getLastWeekStart(year, month) {
-    let result = new Date(year, month, 0)
-
-    let dayOfWeek = this._mondayBased ? dateUtils.mondayBasedDayOfWeek(result) : result.getDay()
-
-    if (dayOfWeek > 0) {
-      result = new Date(
-        result.getTime() - (dateUtils.MILISECONDS_IN_DAY * dayOfWeek)
-      )
-    }
-    return result
+  getLastWeekStart (year, month) {
+    let monthStart = new Date(year, month, 0)
+    let dayOfWeek = this._mondayBased ? dateUtils.mondayBasedDayOfWeek(monthStart) : monthStart.getDay()    
+    return dateUtils.decDay(monthStart, dayOfWeek)
   }
 
-  getDates(year, month, numberOfWeeks) {    
+  getDates (year, month, numberOfWeeks) {
     let monthStart = this.getLastWeekStart(year, month)
     let result = []
     let week = []
-    let date;
-    for (let i = 0; i < numberOfWeeks; i++) {      
-      for (let j = 0; j < dateUtils.DAYS_IN_WEEK; j++) {
-        date = new Date(
-          monthStart.getTime() + 
-          (((i * dateUtils.DAYS_IN_WEEK) + j) * dateUtils.MILISECONDS_IN_DAY))
-        week.push(date)              
-      }      
+    for (let i = 0; i < numberOfWeeks; i++) {
+      for (let j = 0; j < dateUtils.DAYS_OF_WEEK.length; j++) {
+        week.push(dateUtils.incDay(monthStart, (i * dateUtils.DAYS_OF_WEEK.length) + j))
+      }
       result.push(week)
-      week = []  
+      week = []
     }
     return result
-  } 
+  }
 
-  incMonth(month, year) {
+  incMonth (month, year) {
     if ((month) || (month === 0)) {
-      if (month === dateUtils.DECEMBER_INDEX) {
-        month = dateUtils.JANUARY_INDEX      
+      if (month === dateUtils.DEC) {
+        month = dateUtils.JAN
         if (year) {
           year++
         }
       } else {
         month++
-      }       
+      }
     }
     return { month, year }
   }
 
-  decMonth(month, year) {
+  decMonth (month, year) {
     if ((month) || (month === 0)) {
-      if (month === dateUtils.JANUARY_INDEX) {
-        month = dateUtils.DECEMBER_INDEX      
+      if (month === dateUtils.JAN) {
+        month = dateUtils.DEC
         if (year) {
           year--
         }
       } else {
         month--
-      }       
+      }
     }
     return { month, year }
   }

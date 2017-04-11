@@ -1,64 +1,75 @@
-export const dateUtils = {
+class DateUtils {
+  constructor () {
+    this.MILISECONDS_IN_DAY = 24 * 60 * 60 * 1000; // consider timezones change e.g. last sun of oct
 
-  MILISECONDS_IN_DAY: 24 * 60 * 60 * 1000,
-  DAYS_IN_WEEK: 7,
-  JANUARY_INDEX: 0,
-  DECEMBER_INDEX: 11,
-  MONTH_NAMES: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-  MONTH_NAMES_SHORT: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],   
-  SU: 0, MO: 1, TU: 2, WE: 3, TH: 4, FR: 5, SA: 6,
-  MO_TILL_FR: [1, 2, 3, 4, 5],
+    [this.SU, this.MO, this.TU, this.WE, this.TH, this.FR, this.SA] = [0, 1, 2, 3, 4, 5, 6]
+    this.DAYS_OF_WEEK = [this.SU, this.MO, this.TU, this.WE, this.TH, this.FR, this.SA]
+    this.DAYS_OF_WEEK_MONDAY_BASED = [this.MO, this.TU, this.WE, this.TH, this.FR, this.SA, this.SU]
+    this.MO_FR = [this.MO, this.TU, this.WE, this.TH, this.FR]
+    this.DAY_NAMES = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
-  sameDay: function (dateOne, dateTwo) {
+    [this.JAN, this.DEC] = [0, 11]
+    this.MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    this.MONTH_NAMES_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  }
+
+  sameDay (dateOne, dateTwo) {
     return ((dateOne.getDate() === dateTwo.getDate()) &&
       (dateOne.getMonth() === dateTwo.getMonth()) &&
       (dateOne.getFullYear() === dateTwo.getFullYear()))
-  },
+  }
 
-  isToday(date) {
+  isToday (date) {
     return dateUtils.sameDay(new Date(), date)
-  },
+  }
 
   sameDayOrBefore (date, dateToCompare) {
     return (dateUtils.sameDay(date, dateToCompare) || (date > dateToCompare))
-  },
+  }
 
   sameDayOrAfter (date, dateToCompare) {
     return (dateUtils.sameDay(date, dateToCompare) || (date < dateToCompare))
-  },
-
-  decDay (date) {
-    return new Date(date.getTime() - dateUtils.MILISECONDS_IN_DAY)
-  },
-
-  incDay (date, numberOfDays = 1) {
-    return new Date(date.getTime() + (dateUtils.MILISECONDS_IN_DAY * numberOfDays))
-  },
-
-  getStartOfMonth(date) {
-    return new Date(dateOne.getFullYear(), dateOne.getMonth(), 1)
-  },
-
-  mondayBasedDayOfWeekIdx(index) {
-    return (index == 0 ? 6 : (index - 1))
-  },
-
-  mondayBasedDayOfWeek(date) {
-    return dateUtils.mondayBasedDayOfWeekIdx(date.getDay())
-  },
-
-  getDaysBetween(startDate, endDate) {
-    return Math.floor(
-      (startDate.getTime() - endDate.getTime()) / dateUtils.MILISECONDS_IN_DAY)
-  },
-
-  encodeDate(date) {
-    return [date.getFullYear(), date.getMonth(), date.getDate()]
-  },
-
-  clearTime(date) {    
-    return new Date(...dateUtils.encodeDate(date))
   }
 
+  incDay (date, numberOfDays = 1) {
+    let result = new Date(date.getTime())
+    result.setDate(result.getDate() + numberOfDays)
+    return result
+  }
 
+  decDay (date, numberOfDays = 1) {
+    return this.incDay(date, 0 - numberOfDays)
+  }
+
+  getStartOfMonth (date) {
+    return new Date(date.getFullYear(), date.getMonth(), 1)
+  }
+
+  mondayBasedDayOfWeekIdx (index) {
+    return (index === 0 ? 6 : (index - 1))
+  }
+
+  mondayBasedDayOfWeek (date) {
+    return dateUtils.mondayBasedDayOfWeekIdx(date.getDay())
+  }
+
+  getUTCTime (date) {
+    return date.getTime() + date.getTimezoneOffset()
+  }
+
+  getDaysBetween (startDate, endDate) {
+    return Math.abs(Math.floor(
+      (this.getUTCTime(endDate) - this.getUTCTime(startDate)) / dateUtils.MILISECONDS_IN_DAY))
+  }
+
+  encodeDate (date) {
+    return [date.getFullYear(), date.getMonth(), date.getDate()]
+  }
+
+  clearTime (date) {
+    return new Date(...dateUtils.encodeDate(date))
+  }
 }
+
+export const dateUtils = new DateUtils()
+

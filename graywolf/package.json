@@ -10,5 +10,8 @@
   "license": "ISC",
   "devDependencies": {
     "pg": "^6.1.5"
+  },
+  "dependencies": {
+    "body-parser": "^1.17.1"
   }
 }

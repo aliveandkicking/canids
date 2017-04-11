@@ -8,23 +8,23 @@ function testPg() {
   // the same environment variables used by postgres cli tools 
   var client = new pg.Client({
     user: 'postgres', //env var: PGUSER 
-    database: 'sandbox', //env var: PGDATABASE 
+    database: 'sandbox', //env var: PGDATABASE
     password: '123456', //env var: PGPASSWORD 
     host: 'localhost', // Server hosting the postgres database 
     port: 5432, //env var: PGPORT  
   });
-  
+
   // connect to our database 
   client.connect(function (err) {
     if (err) throw err;
-  
-    // execute a query on our database 
+
+    // execute a query on our database
     client.query('SELECT * FROM main', [], function (err, result) {
       if (err) throw err;
-  
-      // just print the result to the console 
-      console.log(result.rows); // outputs: { name: 'brianc' } 
-  
+
+      // just print the result to the console
+      console.log(result.rows); // outputs: { name: 'brianc' }
+
       // disconnect the client 
       client.end(function (err) {
         if (err) throw err;
@@ -36,7 +36,9 @@ function testPg() {
 function run() {
   http.createServer(function (req, res) {
     res.writeHead(200, {'Content-Type': 'text/plain'});
-    res.end('Hello World\n');
+    res.end('Hello World !\n' + JSON.stringify(req));
+
+    
   }).listen(8080);
 
   console.log('Server running on port 8080.');

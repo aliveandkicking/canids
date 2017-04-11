@@ -3,18 +3,14 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
+import { DateHelperService } from "./services/date-helper.service";
+
 import { AppComponent } from './app.component';
-import { DayComponent } from './components/day/day.component';
-import { TaskComponent } from './components/task/task.component';
-import { CalendarComponent } from './components/calendar/calendar.component';
-import { CreateTaskComponent } from './components/create-task/create-task.component';
-import { RepeatRulesComponent } from './components/repeat-rules/repeat-rules.component';
+import { CalendarComponent, CreateTaskComponent, RepeatRulesComponent } from "./components";
 
 @NgModule({
   declarations: [
     AppComponent,
-    DayComponent,
-    TaskComponent,
     CalendarComponent,
     CreateTaskComponent,
     RepeatRulesComponent
@@ -22,9 +18,11 @@ import { RepeatRulesComponent } from './components/repeat-rules/repeat-rules.com
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule,    
+    HttpModule,
   ],
-  providers: [],
+  providers: [
+    DateHelperService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

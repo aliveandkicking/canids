@@ -1,29 +1,79 @@
-<p>
-  repeat-rules works!
-</p>
-
-<select>
-  <option *ngFor="let mode of getRepeatModeList()" value="mode.id">
-    {{mode.name}}
-  <option>
-
-</select>
-
-<div> 
-  repeat every: 
-  <input type="text">
+<div>
+  <button *ngFor="let mode of getRepeatModeList()"
+    [ngClass]="getModeButtonClass(mode.id)"
+    (click)="onModeSelected(mode.id)">
+    {{mode.title}}
+  </button>
 </div>
 
-<div> 
-  starts on: 
-  <input type="text">
+<!--once-->
+<div *ngIf="isLayoutVisible(repeatModes.once)">
+  Date: 
+  <input #date
+    type="date"
+    value="{{getStartDate() | date:getDateFormat()}}"
+    (input)="setStartDate(date.valueAsDate)"
+    (wheel)="onDateInputWheel()">
 </div>
 
-<div> 
-  ends: 
-  <input type="text">
+<!--repeat-->
+<div *ngIf="!isLayoutVisible(repeatModes.once)">
+  <div>
+    Repeat every:
+    <input #everyCtrl
+      type="number"
+      min="1"
+      max="30"
+      value="{{getRepeatEvery()}}"
+      (input)="setRepeatEvery(everyCtrl.value)">
+  </div>
+  
+  <!--weekly-->
+  <div *ngIf="isLayoutVisible(repeatModes.weekly)">
+    <button *ngFor="let day of getDaysOfWeek()"
+      [ngClass]="getDayOfWeekButtonClass(day)"
+      (click)="onDayOfWeekClick(day)">
+      {{getDayName(day)}}
+    </button>
+  </div>
+
+  <!--monthly-->
+  <div *ngIf="isLayoutVisible(repeatModes.monthly)">
+    <button (click)="setUseDayOfTheLastWeek(false)">
+      Day of Month
+    </button>
+    <button (click)="setUseDayOfTheLastWeek(true)">
+      Day of the last week
+    </button>
+  </div>
+
+  <div>
+    Starts on: 
+    <input #startDate
+      type="date"
+      value="{{getStartDate() | date:getDateFormat()}}"
+      (input)="setStartDate(startDate.valueAsDate)"
+      (wheel)="onDateInputWheel()">
+  </div>
+  <div>
+    Ends on:
+    <input #endDate
+      type="date"
+      value="{{getEndDate() | date:getDateFormat()}}"
+      (input)="setEndDate(endDate.valueAsDate)"
+      (wheel)="onDateInputWheel()"
+      [disabled]="getNeverEnd()">
+
+    <input #never
+      type="checkbox"
+      [checked]="getNeverEnd()"
+      (change)="setNeverEnd(never.checked)">
+    never
+  </div>
 </div>
 
-<button (click)="doCheck()"> check </button>
+<br>
+<br>
+<br>
 
 <calendar [onCheckIfDateIsSelected]="onCheckIfDateIsSelected">Loading ...</calendar>
