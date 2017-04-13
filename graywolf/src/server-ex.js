@@ -1,32 +1,29 @@
-var express = require('express')
-var server = express()
+const express = require('express')
+const bodyParser = require('body-parser')
+const server = express()
 
-var bodyParser = require('body-parser')
-
-let isRuning = false
-let handlers = []
-
-var run = function () {
-  if (!isRuning) {
-    console.dir(handlers)
-    server.listen(3000)
-  }
-}
-
-server.all('/*', function(req, res, next) {
+server.all('/*', function (req, res, next) {
   console.dir(req.body)
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-  res.header("Access-Control-Allow-Headers", "Origin, Access-Control-Allow-Origin, X-Requested-With, Content-Type, Accept, Authorization");
-  next();
-});
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT')
+  res.header('Access-Control-Allow-Headers', 'Origin, Access-Control-Allow-Origin, X-Requested-With, Content-Type, Accept, Authorization')
+  next()
+})
 
-server.use(bodyParser.text());
+server.use(bodyParser.text())
 
-var addHandler = function (path, handler) {
-  server.post(path, handler)
-  handlers.push({path, handler})
+var run = function (port) {
+  console.log('listening port ' + port)
+  server.listen(port)
 }
 
-module.exports.addHandler = addHandler
+var createRouter = function (root) {
+  let router = express.Router()
+  if (root) {
+    server.use(router)
+  }
+  return router
+}
+
+module.exports.createRouter = createRouter
 module.exports.run = run

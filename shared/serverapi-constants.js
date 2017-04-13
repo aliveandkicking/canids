@@ -3,16 +3,10 @@ class Constants {
     this.SEPARATOR = '/'
     this.TASK = 'task'
     this.ADD = 'add'
-    this.TASK_ADD = this.initPath([this.TASK, this.ADD])
-  }
 
-  initPath (path) {
-    return this.SEPARATOR + path.join(this.SEPARATOR)
+    this.ROUTER = 'ROUTER'
+    this.POST = 'POST'
   }
 }
 
-const constants = new Constants()
-
-console.dir(constants)
-
-module.exports.constants = constants
+module.exports.constants = new Constants()

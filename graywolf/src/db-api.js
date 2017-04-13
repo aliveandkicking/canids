@@ -9,11 +9,11 @@ class DbApi {
   createClient () {
     return (
       new pg.Client({
-        user: 'postgres', // env var: PGUSER
-        database: 'sandbox', // env var: PGDATABASE
-        password: '123456', // env var: PGPASSWORD
-        host: 'localhost', // Server hosting the postgres database
-        port: 5432 // env var: PGPORT
+        user: 'postgres',
+        database: 'sandbox',
+        password: '123456',
+        host: 'localhost',
+        port: 5432
       })
     )
   }
@@ -29,6 +29,7 @@ class DbApi {
     if (!this.connected) {
       this.connect()
     }
+    console.log(sql)
     this.client.query(sql, [],
       function (err, result) {
         if (err) throw err

@@ -1,4 +1,3 @@
-require('./src/handlers/base.handler')
-require('./src/handlers/task-add.handler')
-
-require('./src/server-ex').run()
+const server = require('./src/server-ex')
+require('./src/handlers/initializer').run(server)
+server.run(3000)
