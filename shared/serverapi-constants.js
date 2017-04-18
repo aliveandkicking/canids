@@ -6,6 +6,8 @@ class Constants {
 
     this.ROUTER = 'ROUTER'
     this.POST = 'POST'
+
+    this.SERVER_URL = 'http://localhost:3000'
   }
 }
 

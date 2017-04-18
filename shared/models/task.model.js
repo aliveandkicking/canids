@@ -1,7 +1,9 @@
 import { RepeatRulesModel } from './repeat-rules.model'
+import { BaseModel } from './base.model'
 
-export class TaskModel {
+export class TaskModel extends BaseModel {
   constructor () {
+    super()
     this.id = null
     this.name = 'simple task'
     this.repeatRules = new RepeatRulesModel()
@@ -11,7 +13,6 @@ export class TaskModel {
     this.name = name
     return this
   }
-
 }
 // biktop
 export const tasksTemp = [

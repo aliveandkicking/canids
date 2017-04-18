@@ -21,7 +21,6 @@ export class TaskCreateViewModel {
   }
 
   save () {
-    console.dir(JSON.stringify(this._task))
     this._model.post()
   }
 

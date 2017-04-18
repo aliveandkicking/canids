@@ -1,4 +1,5 @@
 import { dateUtils } from '../utils/dateutils'
+import { BaseModel } from './base.model'
 
 export const REPEAT_MODE = {
   ONCE: 0,
@@ -20,7 +21,7 @@ class DailyRules extends BaseRules {}
 class WeeklyRules extends BaseRules {
   constructor (every = 1) {
     super(every)
-    this.weekDays = [].concat(dateUtils.MO_FR)
+    this.weekDays = [].concat(dateUtils.MO_FR) // biktop is bad practice
   }
 }
 
@@ -33,8 +34,9 @@ class MonthlyRules extends BaseRules {
 
 class YearlyRules extends BaseRules {}
 
-export class RepeatRulesModel {
+export class RepeatRulesModel extends BaseModel {
   constructor () {
+    super()
     this._mode = REPEAT_MODE.ONCE
     this.dailyRules = null
     this.weeklyRules = null
@@ -47,6 +49,14 @@ export class RepeatRulesModel {
     this.neverEnd = true
   }
 
+  // getPropertyForJson (property) {
+  //   return this[property]
+  // }
+
+  // loadPropertyFromJson (property, value){
+  //   this[property] = value
+  // }
+
   setMondayBased (mondayBased) {
     this._mondayBased = mondayBased
   }
@@ -57,7 +67,7 @@ export class RepeatRulesModel {
 
   setStartDate (date) {
     if (date) {
-      this._startDate = dateUtils.clearTime(date)      
+      this._startDate = dateUtils.clearTime(date)
     }
   }
 
