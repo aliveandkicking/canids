@@ -7,16 +7,6 @@ export class TaskCreateModel {
   }
 
   post () {
-    let s = new Date()
-    let iterations = 1000000
-    for (let i = 0; i <= iterations; i++) {
-      this.task.toJson()
-    }
-    let t = new Date((new Date()).getTime() - s.getTime())
-    console.log('time(for ' + iterations + ' reps):', t.getSeconds() + ':' + t.getMilliseconds())
-    console.log('1 iteration:', (t.getTime() / iterations / 1000))
-
-    return
     let client = new HttpClient()
     client.post(constants.SERVER_URL + '/task/add',
       function (response) {
