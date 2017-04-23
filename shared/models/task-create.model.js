@@ -8,11 +8,11 @@ export class TaskCreateModel {
 
   post () {
     let client = new HttpClient()
-    client.post(constants.SERVER_URL + '/task/add',
+    client.post(constants.SERVER_URL + '/save',
       function (response) {
         console.log(response)
       },
-      JSON.stringify(this.task)
+      this.task.toJson()
     )
   }
 }

@@ -34,6 +34,7 @@ class DbApi {
       function (err, result) {
         if (err) throw err
         console.dir(result)
+        console.log(result.rows)
       }
     )
   }

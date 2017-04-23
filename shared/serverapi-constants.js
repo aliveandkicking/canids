@@ -1,11 +1,14 @@
 class Constants {
   constructor () {
     this.SEPARATOR = '/'
-    this.TASK = 'task'
-    this.ADD = 'add'
+
+    this.SAVE = 'save'
+    this.LOAD = 'load'
 
     this.ROUTER = 'ROUTER'
+
     this.POST = 'POST'
+    this.GET = 'GET'
 
     this.SERVER_URL = 'http://localhost:3000'
   }

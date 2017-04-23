@@ -11,28 +11,27 @@ DROP FUNCTION IF EXISTS load_object(a_entity_id int, id int, a_objfield_prefix t
 CREATE FUNCTION load_object(a_entity_id int, a_id int, a_objfield_prefix text) RETURNS jsonb AS $$	
 DECLARE	
 	l_rec record;	
-	l_result text[];
+	l_result jsonb;
 	l_subentity text;
 BEGIN	
 	RAISE NOTICE 'load_object: % %', a_entity_id, a_id;
 
-	l_result := '{}';
+	l_result := '{}'::jsonb;
 	FOR l_rec IN SELECT * FROM data WHERE (entity_id = a_entity_id) AND (instance_id = a_id)
 	LOOP
 		RAISE NOTICE 'record: %', l_rec;
 		
 		IF (position(a_objfield_prefix in l_rec.name) = 1) THEN			
 			l_subentity := trim(leading a_objfield_prefix from l_rec.name);
-			l_result := array_append(l_result, l_subentity);
-			l_result := array_append(l_result, (SELECT load_object(l_subentity, a_id, a_objfield_prefix))::text); 		
+			l_result := l_result || jsonb_build_object(l_subentity,
+				load_object(l_subentity, a_id, a_objfield_prefix)); 		
 		ELSE
-			l_result := array_append(l_result, l_rec.name); 
-			l_result := array_append(l_result, l_rec.value);			
+			l_result := l_result || jsonb_build_object(l_rec.name, l_rec.value);			
 		END IF;	
 	END LOOP;
 
-	RAISE NOTICE 'res array: %', l_result;
-	RETURN jsonb_object(l_result);
+	RAISE NOTICE 'res obj: %', l_result;
+	RETURN l_result;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -77,6 +76,6 @@ END;
 $$ LANGUAGE plpgsql;
 
 
--- SELECT * FROM save('{"id":"0","entity":"person","firstName":"Иван","lastName":"Иванов","*addr":{"id":"0","entity":"addr","streetAddress":"Московское ш., 101, кв.101","city":"Ленинград","postalCode":101101},"phoneNumbers":["812 123-1234","916 123-4567"]}');
+SELECT * FROM save('{"id":"0","entity":"person","firstName":"Иван!!","lastName":"Иванов","*addr":{"id":"0","entity":"addr","streetAddress":"Московское ш., 101, кв.101","city":"Ленинград","postalCode":101101},"phoneNumbers":["812 123-1234","916 123-4567"]}');
 
-SELECT * FROM load('person', '[0,3,4]');
+SELECT data FROM load('repeat_mode', '[1,2,3]');

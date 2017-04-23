@@ -1,9 +1,8 @@
 const constants = require('../../../shared/serverapi-constants').constants
 
 const routes = [
-  router(constants.TASK, [
-    post(constants.ADD, require('./task-add.handler'))
-  ])
+  post(constants.SAVE, require('./save.handler')),
+  post(constants.LOAD, require('./load.handler'))
 ]
 
 function item (type = '', route = '', handlers) {
@@ -14,12 +13,16 @@ function item (type = '', route = '', handlers) {
   }
 }
 
-function router (route, handlers) {
-  return item(constants.ROUTER, route, handlers)
+// function router (route, handlers) {
+//   return item(constants.ROUTER, route, handlers)
+// }
+
+function post (route, handler) {
+  return item(constants.POST, route, [handler])
 }
 
-function post (route, module) {
-  return item(constants.POST, route, [module.handler])
+function get (route, handler) {
+  return item(constants.GET, route, [handler])
 }
 
 function run (server) {
