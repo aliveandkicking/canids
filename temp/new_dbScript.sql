@@ -16,8 +16,6 @@ CREATE TABLE entity (
 	CONSTRAINT pk_entity_id PRIMARY KEY(code)
 );
 
-DROP TABLE IF EXISTS data_types CASCADE;
-
 DROP TABLE IF EXISTS data CASCADE;
 
 CREATE TABLE data (
@@ -29,13 +27,54 @@ CREATE TABLE data (
 	CONSTRAINT pk_data_id PRIMARY KEY(entity_id, instance_id, name)
 );
 
-DROP FUNCTION IF EXISTS setting_get(a_code text);
+DROP FUNCTION IF EXISTS setting_get();
 
-CREATE FUNCTION setting_get(a_code text) RETURNS text AS $$	
+CREATE FUNCTION setting_get() RETURNS jsonb AS $$	
+DECLARE
+	l_rec record;
+	l_result jsonb;
 BEGIN
-	RETURN (SELECT value FROM setting WHERE (lower(btrim(a_code)) = key));
+	l_result := '{}'::jsonb;
+	FOR l_rec IN SELECT * FROM setting
+	LOOP
+		l_result := l_result || jsonb_build_object(l_rec.key, l_rec.value);
+	END LOOP;
+	RAISE NOTICE  'json :%', l_result;
+	RETURN l_result; 
 END;
 $$ LANGUAGE plpgsql;
+
+DROP FUNCTION IF EXISTS is_json_object(a_data jsonb);
+
+CREATE FUNCTION is_json_object(a_data jsonb) RETURNS smallint AS $$	
+BEGIN	
+	IF ((position('{' in a_data::text) = 1) AND (position('}' in a_data::text) = length(a_data::text))) THEN
+		RETURN 1::smallint;
+	ELSE
+		RETURN 0::smallint;
+	END IF;
+END;$$ 
+LANGUAGE plpgsql;
+
+DROP FUNCTION IF EXISTS is_json_array(a_data jsonb);
+
+CREATE FUNCTION is_json_array(a_data jsonb) RETURNS smallint AS $$	
+BEGIN	
+	IF ((position('[' in a_data::text) = 1) AND (position(']' in a_data::text) = length(a_data::text))) THEN
+		RETURN 1::smallint;
+	ELSE
+		RETURN 0::smallint;
+	END IF;
+END;$$ 
+LANGUAGE plpgsql;
+
+DROP FUNCTION IF EXISTS entity_getid(a_entity_code text);
+
+CREATE FUNCTION entity_getid(a_entity_code text) RETURNS int AS $$	
+BEGIN	
+	RETURN (SELECT id FROM entity WHERE (a_entity_code = code));
+END;$$ 
+LANGUAGE plpgsql;
 
 DROP FUNCTION IF EXISTS save(a_data jsonb);
 
@@ -46,36 +85,58 @@ DECLARE
 	l_instance_id int;
 	l_json jsonb;
 	l_rec record;
-	l_objfield_prefix text;
-BEGIN		
-	IF (NOT (a_data ?& array['id', 'entity'])) THEN		
+	l_obj_field_prefix text;
+	l_settings jsonb;
+	l_array jsonb;
+	l_array_iter_rec record;
+BEGIN	
+	l_settings := setting_get();
+	RAISE NOTICE  'settings :%', l_settings;
+
+	IF (NOT (a_data ?& array[l_settings ->> 'id_fieldname', l_settings ->> 'entity_fieldname'])) THEN		
 		RETURN QUERY SELECT 0::smallint, 'json has to contain "id" and "entity" fields'::text, -1, -1;
 		RETURN;	
 	END IF;
 	
 	l_json := a_data;	
 	l_instance_id := (l_json ->> 'id')::int;
-	SELECT INTO l_json l_json - 'id';
+	l_json := l_json - 'id';
 	l_entity_code := l_json ->> 'entity';
-	SELECT INTO l_json l_json - 'entity';
-
-	SELECT INTO l_entity_id id FROM entity WHERE (l_entity_code = code);
-
+	l_json := l_json - 'entity';
+	
+	l_entity_id := entity_getid(l_entity_code);
+	-- check if new entity
 	IF (l_entity_id IS NULL) THEN
 		INSERT INTO entity(code) VALUES(l_entity_code);
-		SELECT INTO l_entity_id id FROM entity WHERE (l_entity_code = code);
+		l_entity_id := entity_getid(l_entity_code);
 	END IF;	
 
+	-- check if new instance
 	IF (l_instance_id IS NULL) THEN
 		l_instance_id := (SELECT coalesce(max(instance_id), 0) + 1 FROM data WHERE entity_id = l_entity_id);		
 	END IF;	
 
-	l_objfield_prefix := setting_get('objfield_prefix');
-	FOR l_rec IN  SELECT * FROM jsonb_each(l_json)
+	l_obj_field_prefix := l_settings ->> 'obj_field_prefix';
+
+	FOR l_rec IN SELECT * FROM jsonb_each(l_json)
 	LOOP
-		IF (position(l_objfield_prefix in l_rec.key) = 1) THEN
-			SELECT INTO l_rec.value jsonb_build_object('entity', t.saved_entity_id, 'id', t.saved_id)
-				FROM save(l_rec.value) AS t;	
+		IF (is_json_object(l_rec.value)) THEN
+			SELECT INTO l_rec.value 
+				jsonb_build_object('entity', t.saved_entity_id, 'id', t.saved_id)
+					FROM save(l_rec.value) AS t;
+					
+		ELSEIF	(is_json_array(l_rec.value)) THEN
+			l_array := '[]'::jsonb;
+			FOR l_array_iter_rec IN SELECT jsonb_array_elements(l_rec.value)
+			LOOP
+				IF (is_json_object(l_rec.value)) THEN
+				
+				-- ELSEIF biktop
+					-- l_array := l_array || 
+				END IF;
+			END LOOP;			
+		
+			l_rec.value := l_array;					
 		END IF;	
 		
 		INSERT INTO data(entity_id, instance_id, name, value) 
@@ -88,58 +149,41 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-DROP FUNCTION IF EXISTS entity_getid(a_entity_code text);
+DROP FUNCTION IF EXISTS load_object(a_entity_id int, a_id int, a_settings jsonb);
 
-CREATE FUNCTION entity_getid(a_entity_code text) RETURNS int AS $$	
-BEGIN	
-	RETURN (SELECT id FROM entity WHERE (a_entity_code = code));
-END;$$ 
-LANGUAGE plpgsql;
-
-DROP FUNCTION IF EXISTS load_object(a_entity_id int, id int, a_objfield_prefix text);
-
-CREATE FUNCTION load_object(a_entity_id int, a_id int, a_objfield_prefix text) RETURNS jsonb AS $$	
+-- biktop check time without a_obj_field_prefix
+CREATE FUNCTION load_object(a_entity_id int, a_id int, a_settings jsonb) RETURNS jsonb AS $$ 
 DECLARE	
 	l_rec record;	
 	l_result jsonb;
 	l_subentity text;
+	l_obj_prefix text;
+	l_array_prefix text;
 BEGIN	
-	RAISE NOTICE 'load_object: % %', a_entity_id, a_id;
-
-	l_result := '{}'::jsonb;
-	FOR l_rec IN SELECT * FROM data WHERE (entity_id = a_entity_id) AND (instance_id = a_id)
-	LOOP
-		RAISE NOTICE 'record: %', l_rec;
-		
-		IF (position(a_objfield_prefix in l_rec.name) = 1) THEN
-			l_result := l_result || jsonb_build_object(l_rec.name,
-				load_object((l_rec.value ->> 'entity')::int , (l_rec.value ->> 'id')::int, a_objfield_prefix)); 		
-		ELSE
-			l_result := l_result || jsonb_build_object(l_rec.name, l_rec.value);			
-		END IF;	
-	END LOOP;	
-
-	RAISE NOTICE 'res obj: %', l_result;
-	RETURN l_result;
-END;
-$$ LANGUAGE plpgsql;
-
-DROP FUNCTION IF EXISTS load_object(a_entity_code text, id int, a_objfield_prefix text);
-
-CREATE FUNCTION load_object(a_entity_code text, a_id int, a_objfield_prefix text) RETURNS jsonb AS $$	
-DECLARE	
-	l_entity_id int;		
-BEGIN		
-	l_entity_id := entity_getid(a_entity_code);
-	IF (l_entity_id IS NULL) THEN
+	IF ((a_entity_id IS NULL) OR (a_id IS NULL)) THEN
 		RETURN NULL;
 	END IF;
-	
-	RAISE NOTICE 'args % %', l_entity_id, a_id;
 
-	RAISE NOTICE 'result %', load_object(l_entity_id, a_id, a_objfield_prefix);
- 
-	RETURN load_object(l_entity_id, a_id, a_objfield_prefix);
+	l_result := '{}'::jsonb;
+
+	l_obj_prefix := a_settings ->> 'obj_field_prefix';	
+	l_array_prefix := a_settings ->> 'array_field_prefix';
+	
+	FOR l_rec IN SELECT * FROM data WHERE (entity_id = a_entity_id) AND (instance_id = a_id)
+	LOOP	
+		-- IF (position(l_obj_prefix in l_rec.name) = 1) THEN
+		IF (is_json_object(l_rec.value)) THEN
+			l_result := l_result || jsonb_build_object(l_rec.name,
+				load_object((l_rec.value ->> 'entity')::int, (l_rec.value ->> 'id')::int, a_settings));
+		ELSEIF (is_json_array(l_rec.value)) THEN
+			
+		
+		ElSE
+			l_result := l_result || jsonb_build_object(l_rec.name, l_rec.value);			
+		END IF;	
+	END LOOP;
+
+	RETURN l_result;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -149,36 +193,49 @@ CREATE FUNCTION load(a_entity_code text, ids jsonb) RETURNS TABLE(data jsonb) AS
 DECLARE
 	l_entity_id int;	
 	l_idrec record;
-	l_objfield_prefix text;
+	l_obj_field_prefix text;
 	l_json jsonb;
+	l_settings jsonb;
 BEGIN
-	SELECT INTO l_entity_id entity_getid(a_entity_code);
+	l_entity_id := entity_getid(a_entity_code);
 	IF (l_entity_id IS NULL) THEN
 		RETURN;
 	END IF;		
 
-	l_objfield_prefix := setting_get('objfield_prefix');
+	l_settings := setting_get();
 	FOR l_idrec IN select * from jsonb_array_elements_text(ids)
 	LOOP
-		l_json := load_object(l_entity_id, l_idrec.value::int, l_objfield_prefix);
-
+		l_json := load_object(l_entity_id, l_idrec.value::int, l_settings);
 		l_json := l_json || jsonb_build_object('entity', a_entity_code);
 		l_json := l_json || jsonb_build_object('id', l_idrec.value::int);
-
 		RETURN QUERY SELECT l_json AS data;		
 	END LOOP;	
 END;
 $$ LANGUAGE plpgsql;
 
-INSERT INTO setting VALUES('objfield_prefix', '*');
+-- DML --
 
-SELECT * FROM save('{"id":"0", "entity": "repeat_mode", "title": "None"}');
-SELECT * FROM save('{"id":"1", "entity": "repeat_mode", "title": "Daily"}');
-SELECT * FROM save('{"id":"2", "entity": "repeat_mode", "title": "Weekly"}');
-SELECT * FROM save('{"id":"3", "entity": "repeat_mode", "title": "Monthly"}');
-SELECT * FROM save('{"id":"4", "entity": "repeat_mode", "title": "Yearly"}');
+INSERT INTO setting VALUES('obj_field_prefix', 'object.');
+INSERT INTO setting VALUES('array_field_prefix', 'array.');
+INSERT INTO setting VALUES('entity_fieldname', 'entity');
+INSERT INTO setting VALUES('id_fieldname', 'id');
+
+SELECT save('{"id":"0", "entity": "repeat_mode", "title": "None"}');
+SELECT save('{"id":"1", "entity": "repeat_mode", "title": "Daily"}');
+SELECT save('{"id":"2", "entity": "repeat_mode", "title": "Weekly"}');
+SELECT save('{"id":"3", "entity": "repeat_mode", "title": "Monthly"}');
+SELECT save('{"id":"4", "entity": "repeat_mode", "title": "Yearly"}');
 
 SELECT 'DONE'::text AS result
+
+
+--SELECT is_json_object(value::jsonb), is_json_array(value::jsonb), value from jsonb_each('{"id":0,"entity":"{Friend}","name":"Norris Nixon","sub1":{"id":1,"entity":"Friend","name":"Hilda Phelps"},"sub2":{"id":2,"entity":"Friend","name":"Watkins Key"}, "arr": [1,2,3]}')
+
+-- SELECT is_json_object(value::jsonb), value from json_array_elements('[{"id":0,"entity":"Friend","name":"Norris Nixon"},{"id":1,"entity":"Friend","name":"Hilda Phelps"},{"id":2,"entity":"Friend","name":"Watkins Key"}, {}]')
+
+-- SELECT '{"id":0,"entity":"Friend","name":"Norris Nixon"}'::jsonb->>'name'
+
+
 
 
 
