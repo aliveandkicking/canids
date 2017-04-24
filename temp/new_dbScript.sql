@@ -29,7 +29,7 @@ CREATE TABLE data (
 
 DROP FUNCTION IF EXISTS setting_get();
 
-CREATE FUNCTION setting_get() RETURNS jsonb AS $$	
+CREATE FUNCTION setting_get() RETURNS jsonb AS $$ -- biktop rid of 	
 DECLARE
 	l_rec record;
 	l_result jsonb;
@@ -46,33 +46,41 @@ $$ LANGUAGE plpgsql;
 
 DROP FUNCTION IF EXISTS is_json_object(a_data jsonb);
 
-CREATE FUNCTION is_json_object(a_data jsonb) RETURNS smallint AS $$	
+CREATE FUNCTION is_json_object(a_data jsonb) RETURNS boolean AS $$	
 BEGIN	
-	IF ((position('{' in a_data::text) = 1) AND (position('}' in a_data::text) = length(a_data::text))) THEN
-		RETURN 1::smallint;
-	ELSE
-		RETURN 0::smallint;
-	END IF;
+	RETURN (position('{' in a_data::text) = 1) AND 
+		(position('}' in a_data::text) = length(a_data::text));
 END;$$ 
 LANGUAGE plpgsql;
 
 DROP FUNCTION IF EXISTS is_json_array(a_data jsonb);
 
-CREATE FUNCTION is_json_array(a_data jsonb) RETURNS smallint AS $$	
+CREATE FUNCTION is_json_array(a_data jsonb) RETURNS boolean AS $$	
 BEGIN	
-	IF ((position('[' in a_data::text) = 1) AND (position(']' in a_data::text) = length(a_data::text))) THEN
-		RETURN 1::smallint;
-	ELSE
-		RETURN 0::smallint;
-	END IF;
+	RETURN (position('[' in a_data::text) = 1) AND 
+		(position(']' in a_data::text) = length(a_data::text));
 END;$$ 
 LANGUAGE plpgsql;
 
-DROP FUNCTION IF EXISTS entity_getid(a_entity_code text);
+DROP FUNCTION IF EXISTS process_as_array(a_data jsonb);
 
-CREATE FUNCTION entity_getid(a_entity_code text) RETURNS int AS $$	
+CREATE FUNCTION process_as_array(a_data jsonb) RETURNS jsonb AS $$	
+DECLARE
+	l_rec record;
+	l_result_array jsonb;
 BEGIN	
-	RETURN (SELECT id FROM entity WHERE (a_entity_code = code));
+	l_result_array := '[]'::jsonb;
+	FOR l_rec IN SELECT jsonb_array_elements(a_data)
+	LOOP
+		IF (is_json_object(l_rec.value)) THEN -- check if savable
+			SELECT INTO l_rec.value 
+				jsonb_build_object('entity', t.saved_entity_id, 'id', t.saved_id)					FROM save(l_rec.value) AS t;			
+					
+		ELSEIF	(is_json_array(l_rec.value)) THEN
+			l_rec.value := process_as_array(l_rec.value)
+		END IF;
+		l_result_array := l_result_array || l_rec.value
+	END LOOP;
 END;$$ 
 LANGUAGE plpgsql;
 
@@ -88,6 +96,7 @@ DECLARE
 	l_obj_field_prefix text;
 	l_settings jsonb;
 	l_array jsonb;
+	l_array_el jsonb;
 	l_array_iter_rec record;
 BEGIN	
 	l_settings := setting_get();
@@ -104,23 +113,21 @@ BEGIN
 	l_entity_code := l_json ->> 'entity';
 	l_json := l_json - 'entity';
 	
-	l_entity_id := entity_getid(l_entity_code);
+	SELECT INTO l_entity_id id FROM entity WHERE (l_entity_code = code);
 	-- check if new entity
 	IF (l_entity_id IS NULL) THEN
 		INSERT INTO entity(code) VALUES(l_entity_code);
-		l_entity_id := entity_getid(l_entity_code);
+		SELECT INTO l_entity_id id FROM entity WHERE (l_entity_code = code);		
 	END IF;	
 
 	-- check if new instance
 	IF (l_instance_id IS NULL) THEN
-		l_instance_id := (SELECT coalesce(max(instance_id), 0) + 1 FROM data WHERE entity_id = l_entity_id);		
-	END IF;	
-
-	l_obj_field_prefix := l_settings ->> 'obj_field_prefix';
+		l_instance_id := (SELECT coalesce(max(instance_id), 0) + 1 FROM data WHERE entity_id = l_entity_id);	
+	END IF;		
 
 	FOR l_rec IN SELECT * FROM jsonb_each(l_json)
 	LOOP
-		IF (is_json_object(l_rec.value)) THEN
+		IF (is_json_object(l_rec.value)) THEN -- check if savable
 			SELECT INTO l_rec.value 
 				jsonb_build_object('entity', t.saved_entity_id, 'id', t.saved_id)
 					FROM save(l_rec.value) AS t;
@@ -130,9 +137,12 @@ BEGIN
 			FOR l_array_iter_rec IN SELECT jsonb_array_elements(l_rec.value)
 			LOOP
 				IF (is_json_object(l_rec.value)) THEN
-				
-				-- ELSEIF biktop
-					-- l_array := l_array || 
+					SELECT INTO l_array_el 
+						jsonb_build_object('entity', t.saved_entity_id, 'id', t.saved_id)
+							FROM save(l_rec.value) AS t;
+					l_array := l_array || l_array_el;
+				-- ELSEIF biktop what if internal array ?
+					-- l_array := l_array ||  
 				END IF;
 			END LOOP;			
 		
@@ -197,7 +207,7 @@ DECLARE
 	l_json jsonb;
 	l_settings jsonb;
 BEGIN
-	l_entity_id := entity_getid(a_entity_code);
+	SELECT INTO l_entity_id id FROM entity WHERE (l_entity_code = code);
 	IF (l_entity_id IS NULL) THEN
 		RETURN;
 	END IF;		
