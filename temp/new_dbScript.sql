@@ -51,12 +51,12 @@ DROP FUNCTION IF EXISTS _process_value(a_data jsonb);
 CREATE FUNCTION _process_value(a_data jsonb) RETURNS jsonb AS $$	
 BEGIN	
 	IF (_is_json_object(a_data)) THEN
-		RETURN _process_as_object(a_data);
+		RETURN _save_as_object(a_data);
 	ELSEIF (_is_json_array(a_data)) THEN
 		RETURN _process_as_array(a_data);
 	END IF;
-	RETURN a_data;	
-END;$$ 
+	RETURN a_data;
+END;$$
 LANGUAGE plpgsql;
 
 ------------------------------------- _process_as_array -------------------------------------
@@ -69,7 +69,7 @@ DECLARE
 	l_result_array jsonb; 
 BEGIN	
 	l_result_array := '[]'::jsonb;
-	FOR l_rec IN SELECT jsonb_array_elements(a_data)
+	FOR l_rec IN SELECT * FROM jsonb_array_elements(a_data)
 	LOOP
 		l_result_array := l_result_array || _process_value(l_rec.value);
 	END LOOP;
@@ -77,7 +77,7 @@ BEGIN
 END;$$ 
 LANGUAGE plpgsql;
 
--------------------------------------  -------------------------------------
+------------------------------------- _extract_required_values -------------------------------------
 
 DROP FUNCTION IF EXISTS _extract_required_values(a_data jsonb);
 
@@ -108,15 +108,15 @@ $$ LANGUAGE plpgsql;
 
 ------------------------------------- _process_as_object -------------------------------------
 
-DROP FUNCTION IF EXISTS _process_as_object(a_data jsonb, a_only_valid boolean);
+DROP FUNCTION IF EXISTS _save_as_object(a_data jsonb, a_only_valid boolean);
 
-CREATE FUNCTION _process_as_object(a_data jsonb, a_only_valid boolean default false) RETURNS jsonb AS $$	
+CREATE FUNCTION _save_as_object(a_data jsonb, a_only_valid boolean default false) RETURNS jsonb AS $$
 DECLARE
 	l_rec record;
 	l_instance_id int;
 	l_entity_id int;
 BEGIN
-	IF (NOT (a_data ?& array['id', 'entity'])) THEN		
+	IF (NOT (a_data ?& array['id', 'entity'])) THEN
 		RAISE NOTICE 'Object % does not have "id" or "entity" field', a_data::text;
 		IF (a_only_valid) THEN
 			RETURN NULL;
@@ -145,7 +145,7 @@ CREATE FUNCTION save(a_data jsonb) RETURNS TABLE(success smallint, message text,
 DECLARE
 	l_saved_obj jsonb;
 BEGIN
-	l_saved_obj := _process_as_object(a_data, true);
+	l_saved_obj := _save_as_object(a_data, true);
 	IF (l_saved_obj IS NULL) THEN
 		RETURN QUERY SELECT 0::smallint, 'json has to contain "id" and "entity" fields'::text, -1;
 		RETURN;
@@ -154,45 +154,69 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-------------------------------------- _load_object -------------------------------------
+------------------------------------- _load_value -------------------------------------
 
-DROP FUNCTION IF EXISTS _load_object(a_entity_id int, a_id int, a_settings jsonb);
+DROP FUNCTION IF EXISTS _load_value(a_data jsonb);
 
--- biktop check time without a_obj_field_prefix
-CREATE FUNCTION _load_object(a_entity_id int, a_id int, a_settings jsonb) RETURNS jsonb AS $$ 
-DECLARE	
-	l_rec record;	
-	l_result jsonb;
-	l_subentity text;
-	l_obj_prefix text;
-	l_array_prefix text;
+CREATE FUNCTION _load_value(a_data jsonb) RETURNS jsonb AS $$
 BEGIN	
-	IF ((a_entity_id IS NULL) OR (a_id IS NULL)) THEN
-		RETURN NULL;
+	IF (_is_json_object(a_data)) THEN
+		RETURN _load_as_object(a_data);
+	ELSEIF (_is_json_array(a_data)) THEN
+		RETURN _load_as_array(a_data);
+	END IF;
+	RETURN a_data;
+END;$$
+LANGUAGE plpgsql;
+
+------------------------------------- _load_as_array -------------------------------------
+
+DROP FUNCTION IF EXISTS _load_as_array(a_data jsonb);
+
+CREATE FUNCTION _load_as_array(a_data jsonb) RETURNS jsonb AS $$
+DECLARE
+	l_rec record;
+	l_result_array jsonb;
+BEGIN
+	l_result_array := '[]'::jsonb;
+	FOR l_rec IN SELECT * FROM jsonb_array_elements(a_data)
+	LOOP
+		l_result_array := l_result_array || _load_value(l_rec.value);
+	END LOOP;
+	RETURN l_result_array;
+END;$$ 
+LANGUAGE plpgsql;
+
+------------------------------------- _load_as_object -------------------------------------
+
+DROP FUNCTION IF EXISTS _load_as_object(a_data jsonb, a_only_valid boolean);
+
+CREATE FUNCTION _load_as_object(a_data jsonb, a_only_valid boolean default false) RETURNS jsonb AS $$
+DECLARE
+	l_rec record;
+	l_instance_id int;
+	l_entity_id int;
+	l_entity_id int;
+	l_result_obj jsonb;
+BEGIN
+	IF (NOT (a_data ?& array['instance_id', 'entity_id'])) THEN
+		RAISE NOTICE 'Object % does not have "instance_id" or "entity" field', a_data::text;
+		IF (a_only_valid) THEN
+			RETURN NULL;
+		END IF;
+		RETURN a_data;
 	END IF;
 
-	l_result := '{}'::jsonb;
+	SELECT INTO l_entity_id, l_instance_id, (a_data ->> 'entity_id')::int, (a_data ->> 'instance_id')::int;
 
-	l_obj_prefix := a_settings ->> 'obj_field_prefix';	
-	l_array_prefix := a_settings ->> 'array_field_prefix';
-	
-	FOR l_rec IN SELECT * FROM data WHERE (entity_id = a_entity_id) AND (instance_id = a_id)
-	LOOP	
-		-- IF (position(l_obj_prefix in l_rec.name) = 1) THEN
-		IF (is_json_object(l_rec.value)) THEN
-			l_result := l_result || jsonb_build_object(l_rec.name,
-				load_object((l_rec.value ->> 'entity')::int, (l_rec.value ->> 'id')::int, a_settings));
-		ELSEIF (is_json_array(l_rec.value)) THEN
-			
-		
-		ElSE
-			l_result := l_result || jsonb_build_object(l_rec.name, l_rec.value);			
-		END IF;	
+	l_result_obj := jsonb_build_object('entity', l_instance_id, 'id', l_instance_id); -- biktop
+	FOR l_rec IN SELECT name, value FROM data WHERE (entity_id = l_entity_id) AND (instance_id = l_instance_id)
+	LOOP
+		l_result_obj := l_result_obj || jsonb_build_object(l_rec.name, _load_value(l_rec.value));
 	END LOOP;
-
-	RETURN l_result;
-END;
-$$ LANGUAGE plpgsql;
+	RETURN l_result_obj;
+END;$$ 
+LANGUAGE plpgsql;
 
 ------------------------------------- load -------------------------------------
 
@@ -200,24 +224,21 @@ DROP FUNCTION IF EXISTS load(a_entity_code text, ids jsonb);
 
 CREATE FUNCTION load(a_entity_code text, ids jsonb) RETURNS TABLE(data jsonb) AS $$	
 DECLARE
-	l_entity_id int;	
+	l_entity_id int;
 	l_idrec record;
-	l_obj_field_prefix text;
 	l_json jsonb;
-	l_settings jsonb;
 BEGIN
 	SELECT INTO l_entity_id id FROM entity WHERE (l_entity_code = code);
 	IF (l_entity_id IS NULL) THEN
 		RETURN;
-	END IF;		
+	END IF;
 
-	l_settings := setting_get();
 	FOR l_idrec IN select * from jsonb_array_elements_text(ids)
 	LOOP
-		l_json := _load_object(l_entity_id, l_idrec.value::int, l_settings);
-		l_json := l_json || jsonb_build_object('entity', a_entity_code);
-		l_json := l_json || jsonb_build_object('id', l_idrec.value::int);
-		RETURN QUERY SELECT l_json AS data;		
+		l_json := _load_as_object(l_entity_id, l_idrec.value::int);
+		IF (NOT l_json IS NULL) THEN
+			RETURN QUERY SELECT l_json AS data;
+		END IF;
 	END LOOP;	
 END;
 $$ LANGUAGE plpgsql;
