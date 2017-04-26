@@ -9,6 +9,8 @@ CREATE TABLE entity (
 	CONSTRAINT pk_entity_id PRIMARY KEY(code)
 );
 
+CREATE UNIQUE INDEX ON entity(code);
+
 ------------------------------------- data -------------------------------------
 
 DROP TABLE IF EXISTS data CASCADE;
@@ -21,6 +23,8 @@ CREATE TABLE data (
 	
 	CONSTRAINT pk_data_id PRIMARY KEY(entity_id, instance_id, name)
 );
+
+-- CREATE UNIQUE INDEX ON data(entity_id, instance_id, name);
 
 ------------------------------------- _is_json_object -------------------------------------
 
@@ -44,26 +48,26 @@ BEGIN
 END;$$ 
 LANGUAGE plpgsql;
 
-------------------------------------- _process_value -------------------------------------
+------------------------------------- _save_value -------------------------------------
 
-DROP FUNCTION IF EXISTS _process_value(a_data jsonb);
+DROP FUNCTION IF EXISTS _save_value(a_data jsonb);
 
-CREATE FUNCTION _process_value(a_data jsonb) RETURNS jsonb AS $$	
+CREATE FUNCTION _save_value(a_data jsonb) RETURNS jsonb AS $$	
 BEGIN	
 	IF (_is_json_object(a_data)) THEN
 		RETURN _save_as_object(a_data);
 	ELSEIF (_is_json_array(a_data)) THEN
-		RETURN _process_as_array(a_data);
+		RETURN _save_as_array(a_data);
 	END IF;
 	RETURN a_data;
 END;$$
 LANGUAGE plpgsql;
 
-------------------------------------- _process_as_array -------------------------------------
+------------------------------------- _save_as_array -------------------------------------
 
-DROP FUNCTION IF EXISTS _process_as_array(a_data jsonb);
+DROP FUNCTION IF EXISTS _save_as_array(a_data jsonb);
 
-CREATE FUNCTION _process_as_array(a_data jsonb) RETURNS jsonb AS $$	
+CREATE FUNCTION _save_as_array(a_data jsonb) RETURNS jsonb AS $$	
 DECLARE
 	l_rec record;
 	l_result_array jsonb; 
@@ -71,7 +75,7 @@ BEGIN
 	l_result_array := '[]'::jsonb;
 	FOR l_rec IN SELECT * FROM jsonb_array_elements(a_data)
 	LOOP
-		l_result_array := l_result_array || _process_value(l_rec.value);
+		l_result_array := l_result_array || _save_value(l_rec.value);
 	END LOOP;
 	RETURN l_result_array;
 END;$$ 
@@ -106,7 +110,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-------------------------------------- _process_as_object -------------------------------------
+------------------------------------- _save_as_object -------------------------------------
 
 DROP FUNCTION IF EXISTS _save_as_object(a_data jsonb, a_only_valid boolean);
 
@@ -128,7 +132,7 @@ BEGIN
 
 	FOR l_rec IN SELECT * FROM jsonb_each(a_data) 
 	LOOP
-		l_rec.value := _process_value(l_rec.value);
+		l_rec.value := _save_value(l_rec.value);
 		INSERT INTO data(entity_id, instance_id, name, value) 
 			VALUES(l_entity_id, l_instance_id, l_rec.key, l_rec.value)
 				ON CONFLICT (entity_id, instance_id, name) DO UPDATE SET value = l_rec.value;
@@ -189,6 +193,7 @@ LANGUAGE plpgsql;
 
 ------------------------------------- _load_as_object -------------------------------------
 
+
 DROP FUNCTION IF EXISTS _load_as_object(a_data jsonb, a_only_valid boolean);
 
 CREATE FUNCTION _load_as_object(a_data jsonb, a_only_valid boolean default false) RETURNS jsonb AS $$
@@ -196,50 +201,66 @@ DECLARE
 	l_rec record;
 	l_instance_id int;
 	l_entity_id int;
-	l_entity_id int;
+	l_entity text;
 	l_result_obj jsonb;
 BEGIN
 	IF (NOT (a_data ?& array['instance_id', 'entity_id'])) THEN
-		RAISE NOTICE 'Object % does not have "instance_id" or "entity" field', a_data::text;
+		RAISE NOTICE 'Object % does not have "instance_id" or "entity_id" field', a_data::text;
 		IF (a_only_valid) THEN
 			RETURN NULL;
 		END IF;
 		RETURN a_data;
 	END IF;
 
-	SELECT INTO l_entity_id, l_instance_id, (a_data ->> 'entity_id')::int, (a_data ->> 'instance_id')::int;
+	SELECT INTO l_entity_id, l_instance_id (a_data ->> 'entity_id')::int, (a_data ->> 'instance_id')::int;
 
-	l_result_obj := jsonb_build_object('entity', l_instance_id, 'id', l_instance_id); -- biktop
+	SELECT INTO l_entity code FROM entity WHERE (id = l_entity_id);
+	IF (l_entity IS NULL) THEN
+		IF (a_only_valid) THEN
+			RETURN NULL;
+		END IF;
+		RETURN a_data;
+	END IF;
+
+	l_result_obj := jsonb_build_object('entity', l_entity, 'id', l_instance_id);
 	FOR l_rec IN SELECT name, value FROM data WHERE (entity_id = l_entity_id) AND (instance_id = l_instance_id)
 	LOOP
 		l_result_obj := l_result_obj || jsonb_build_object(l_rec.name, _load_value(l_rec.value));
 	END LOOP;
 	RETURN l_result_obj;
-END;$$ 
+END;$$
 LANGUAGE plpgsql;
 
 ------------------------------------- load -------------------------------------
+
+DROP FUNCTION IF EXISTS load(a_entity_id int, ids jsonb);
+
+CREATE FUNCTION load(a_entity_id int, ids jsonb) RETURNS TABLE(data jsonb) AS $$	
+DECLARE
+	l_rec record;
+	l_json jsonb;
+BEGIN	
+	FOR l_rec IN select * from jsonb_array_elements_text(ids)
+	LOOP		
+		l_json := _load_as_object(jsonb_build_object('entity_id', a_entity_id, 'instance_id', l_rec.value), true);
+		IF (NOT l_json IS NULL) THEN
+			RETURN QUERY SELECT l_json AS data;
+		END IF;
+	END LOOP;	
+END;
+$$ LANGUAGE plpgsql;
 
 DROP FUNCTION IF EXISTS load(a_entity_code text, ids jsonb);
 
 CREATE FUNCTION load(a_entity_code text, ids jsonb) RETURNS TABLE(data jsonb) AS $$	
 DECLARE
 	l_entity_id int;
-	l_idrec record;
-	l_json jsonb;
 BEGIN
-	SELECT INTO l_entity_id id FROM entity WHERE (l_entity_code = code);
+	SELECT INTO l_entity_id id FROM entity WHERE (code = a_entity_code);
 	IF (l_entity_id IS NULL) THEN
 		RETURN;
 	END IF;
-
-	FOR l_idrec IN select * from jsonb_array_elements_text(ids)
-	LOOP
-		l_json := _load_as_object(l_entity_id, l_idrec.value::int);
-		IF (NOT l_json IS NULL) THEN
-			RETURN QUERY SELECT l_json AS data;
-		END IF;
-	END LOOP;	
+	RETURN QUERY SELECT load(l_entity_id, ids);	
 END;
 $$ LANGUAGE plpgsql;
 
