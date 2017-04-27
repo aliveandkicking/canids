@@ -3,7 +3,8 @@ const bodyParser = require('body-parser')
 const server = express()
 
 server.all('/*', function (req, res, next) {
-  console.dir(req.body)
+  console.dir(req)
+  res.header('Content-type', 'application/json')
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT')
   res.header('Access-Control-Allow-Headers', 'Origin, Access-Control-Allow-Origin, X-Requested-With, Content-Type, Accept, Authorization')
@@ -11,6 +12,7 @@ server.all('/*', function (req, res, next) {
 })
 
 server.use(bodyParser.text())
+server.use(bodyParser.json())
 
 var run = function (port) {
   console.log('listening port ' + port)

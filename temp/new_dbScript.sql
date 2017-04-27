@@ -103,7 +103,7 @@ BEGIN
 	END IF;
 
 	IF (l_instance_id IS NULL) THEN
-		SELECT INTO l_instance_id (coalesce(max(instance_id), 0) + 1) FROM data WHERE (entity_id = l_entity_id);	
+		SELECT INTO l_instance_id (coalesce(max(d.instance_id), 0) + 1) FROM data d WHERE (d.entity_id = l_entity_id);	
 	END IF;
 
 	RETURN QUERY SELECT l_entity_id, l_instance_id, a_data;
@@ -222,10 +222,14 @@ BEGIN
 		RETURN a_data;
 	END IF;
 
+	IF (SELECT (COUNT(instance_id) < 1) FROM data WHERE (entity_id = l_entity_id) AND (instance_id = l_instance_id)) THEN
+		RETURN NULL;
+	END IF;	 
+
 	l_result_obj := jsonb_build_object('entity', l_entity, 'id', l_instance_id);
 	FOR l_rec IN SELECT name, value FROM data WHERE (entity_id = l_entity_id) AND (instance_id = l_instance_id)
 	LOOP
-		l_result_obj := l_result_obj || jsonb_build_object(l_rec.name, _load_value(l_rec.value));
+		l_result_obj := l_result_obj || jsonb_build_object(l_rec.name, _load_value(l_rec.value));		
 	END LOOP;
 	RETURN l_result_obj;
 END;$$
@@ -233,17 +237,33 @@ LANGUAGE plpgsql;
 
 ------------------------------------- load -------------------------------------
 
-DROP FUNCTION IF EXISTS load(a_entity_id int, ids jsonb);
+DROP FUNCTION IF EXISTS load(a_entity_id int, a_ids jsonb);
 
-CREATE FUNCTION load(a_entity_id int, ids jsonb) RETURNS TABLE(data jsonb) AS $$	
+CREATE FUNCTION load(a_entity_id int, a_ids jsonb) RETURNS TABLE(data jsonb) AS $$	
 DECLARE
 	l_rec record;
 	l_json jsonb;
+	i int;
 BEGIN	
-	FOR l_rec IN select * from jsonb_array_elements_text(ids)
+	RAISE notice '%', a_ids;
+	IF ((a_ids ->> 0) = '*') THEN
+		a_ids := '[]'::jsonb;
+		FOR l_rec IN SELECT instance_id FROM data 
+				WHERE (entity_id = a_entity_id) 
+				GROUP BY instance_id 
+				ORDER BY instance_id	
+		LOOP
+			a_ids := a_ids || jsonb_build_array(l_rec.instance_id);
+		END LOOP;	
+	END IF;
+
+RAISE notice '2: %', a_ids;
+
+	FOR i IN 0..(jsonb_array_length(a_ids) - 1)
 	LOOP		
-		l_json := _load_as_object(jsonb_build_object('entity_id', a_entity_id, 'instance_id', l_rec.value), true);
+		l_json := _load_as_object(jsonb_build_object('entity_id', a_entity_id, 'instance_id', a_ids -> i), true);
 		IF (NOT l_json IS NULL) THEN
+			RAISE notice '3 %', l_json;
 			RETURN QUERY SELECT l_json AS data;
 		END IF;
 	END LOOP;	
@@ -252,7 +272,7 @@ $$ LANGUAGE plpgsql;
 
 DROP FUNCTION IF EXISTS load(a_entity_code text, ids jsonb);
 
-CREATE FUNCTION load(a_entity_code text, ids jsonb) RETURNS TABLE(data jsonb) AS $$	
+CREATE FUNCTION load(a_entity_code text, a_ids jsonb) RETURNS TABLE(data jsonb) AS $$	
 DECLARE
 	l_entity_id int;
 BEGIN
@@ -260,7 +280,7 @@ BEGIN
 	IF (l_entity_id IS NULL) THEN
 		RETURN;
 	END IF;
-	RETURN QUERY SELECT load(l_entity_id, ids);	
+	RETURN QUERY SELECT load(l_entity_id, a_ids);	
 END;
 $$ LANGUAGE plpgsql;
 

@@ -3,19 +3,7 @@ var pg = require('pg')
 class DbApi {
   constructor () {
     this.connected = false
-    this.client = this.createClient()
-  }
-
-  createClient () {
-    return (
-      new pg.Client({
-        user: 'postgres',
-        database: 'sandbox',
-        password: '123456',
-        host: 'localhost',
-        port: 5432
-      })
-    )
+    this.client = new pg.Client(require('./connection-params'))
   }
 
   connect () {
@@ -25,16 +13,16 @@ class DbApi {
     this.connected = true
   }
 
-  executeSql (sql) {
+  executeSql (sql, callback) {
     if (!this.connected) {
       this.connect()
     }
-    console.log(sql)
-    this.client.query(sql, [],
+    console.log('sql: ', sql)
+    this.client.query(sql, [], 
       function (err, result) {
+        console.log('sql result: ', result)
         if (err) throw err
-        console.dir(result)
-        console.log(result.rows)
+        callback(result)
       }
     )
   }

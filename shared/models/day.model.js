@@ -14,7 +14,7 @@ export default class DayModel {
   }
 
   retrieveTasks() {
-    this.tasks = tasksTemp;    
+    this.tasks = tasksTemp;
   }
 
 }

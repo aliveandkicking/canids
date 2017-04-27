@@ -7,13 +7,15 @@ import { DateHelperService } from "./services/date-helper.service";
 
 import { AppComponent } from './app.component';
 import { CalendarComponent, CreateTaskComponent, RepeatRulesComponent } from "./components";
+import { WeekComponent } from './components/week/week.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CalendarComponent,
     CreateTaskComponent,
-    RepeatRulesComponent
+    RepeatRulesComponent,
+    WeekComponent
   ],
   imports: [
     BrowserModule,

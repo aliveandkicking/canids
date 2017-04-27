@@ -1,19 +1,18 @@
-import { TaskCreateModel } from '../models/task-create.model'
+import { TaskModel } from '../models/task.model';
 import { RepeatRulesViewModel } from './repeat-rules.viewmodel'
 
 export class TaskCreateViewModel {
   constructor () {
-    this._model = new TaskCreateModel()
-    this._task = this._model.task
-    this.repeatRulesViewModel = new RepeatRulesViewModel(this._task.repeatRules)
+    this._model = new TaskModel()
+    this.repeatRulesViewModel = new RepeatRulesViewModel(this._model.repeatRules)
   }
 
   getTaskName () {
-    return this._task.name
+    return this._model.name
   }
 
   setTaskName (name) {
-    this._task.name = name
+    this._model.name = name
   }
 
   getRepeatRulesViewModel () {
@@ -21,11 +20,11 @@ export class TaskCreateViewModel {
   }
 
   save () {
-    this._model.post()
+    this._model.save()
   }
 
   cancel () {
-    console.dir(this._task)
+    console.dir(this._model)
   }
 
 }

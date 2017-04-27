@@ -21,9 +21,8 @@ export class TaskViewModel {
   setStartDate (date) {
     this._model.date = date
     if (this._model.repeatRules) {
-      this._model.repeatRules.setStartDate(date)      
+      this._model.repeatRules.setStartDate(date)
     }
-
   }
 
   setRepeat (repeat) {

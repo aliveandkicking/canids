@@ -1,8 +1,9 @@
 let dbApi = require('../db-api').dbApi
 
 module.exports = function (req, res) {
-  res.set('Access-Control-Allow-Origin', '*') // biktop
-  console.dir(req.body)
-  dbApi.executeSql("SELECT save('" + req.body + "')")
-  res.send('add task handler called')
+  console.dir(req.body) 
+  dbApi.executeSql("SELECT * FROM save('" + JSON.stringify(req.body) + "')", function (result) {
+    console.log(result.rows);
+    res.send(result.rows)
+  })
 }
