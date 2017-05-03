@@ -1,11 +1,15 @@
-<p>
-  day works!
-</p>
-<ul>
-  <li *ngFor="let id of getTasksIds()">
-    <task    
-     [name]="getTaskNameById(id)"
-    >
-    </task>      
-  </li>
-</ul>
+<div class="root">
+  <div class="header">
+    {{getDate() | date:'yyyy-MM-dd'}}
+  </div>
+
+  <div class="body">
+    <ul>
+      <li>
+
+      </li>
+    </ul>
+  </div>
+</div>
+
+

@@ -49,14 +49,6 @@ export class RepeatRulesModel extends BaseModel {
     this.neverEnd = true
   }
 
-  // getPropertyForJson (property) {
-  //   return this[property]
-  // }
-
-  // loadPropertyFromJson (property, value){
-  //   this[property] = value
-  // }
-
   setMondayBased (mondayBased) {
     this._mondayBased = mondayBased
   }
@@ -120,17 +112,10 @@ export class RepeatRulesModel extends BaseModel {
     return false
   }
 
-  _getFirstDayOfWeek (date) {
-    let dayOfWeek = (this._mondayBased)
-      ? dateUtils.mondayBasedDayOfWeek(date)
-      : date.getDay()
-    return dateUtils.decDay(date, dayOfWeek)
-  }
-
   _checkWeeklyRules (date) {
     if (this.weeklyRules) {
-      let firstDayOfWeek = this._getFirstDayOfWeek(date)
-      let originFirstDayOfWeek = this._getFirstDayOfWeek(this._startDate)
+      let firstDayOfWeek = dateUtils.getStartOfWeek(date)
+      let originFirstDayOfWeek = dateUtils.getStartOfWeek(this._startDate)
       let weeksPassed =
         (dateUtils.getDaysBetween(originFirstDayOfWeek, firstDayOfWeek) /
         dateUtils.DAYS_OF_WEEK.length)

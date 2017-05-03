@@ -26,14 +26,38 @@ class ServerApi {
         this.post(constants.SAVE, object, callback)
     }
 
-    load (object, callback) {
-        this.post(constants.LOAD, object, callback)
+    load (args, callback, object) {
+        this.post(constants.LOAD, args, function(responceText) {
+            loadFromJsonString(responceText, object)
+            if (callback) {
+                callback(anHttpRequest.responseText);
+            }
+        } )
     }
 
     buildJsonString (object) {
         let json = JSON.stringify(this.getJsonValue(object))
         console.log(json);
         return json
+    }
+
+    loadFromJsonString (jsonString, object) {
+        laodFromTempObject(JSON.parse(jsonString), object)
+    }
+
+    loadFromTempObject(tempObject, object) {
+        for (let key in tempObject) {
+            if (tempObject.hasOwnProperty(key)) {
+                if (object[key] instanceof Date) {
+                    let dataArray = tempObject[key].split('/') // biktop
+                    object[key] = new Date(dataArray[2], dataArray[0], dataArray[1])
+                } else if (object[key] instanceof Object) {
+                    if (!tempObject[key]) {
+                        laodFromTempObject(object[key], tempObject[key])
+                    }
+                }
+            }
+        }
     }
 
     getJsonValue (value) {

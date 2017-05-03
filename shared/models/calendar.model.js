@@ -5,8 +5,8 @@ const SUNDAY = 'Su'
 
 
 export class CalendarModel {
-  constructor() {      
-      this._mondayBased = true      
+  constructor() {
+      this._mondayBased = true
       this.dayNames = []
       this.setMondayBased(true)
   } 

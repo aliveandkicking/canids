@@ -9,19 +9,18 @@ import { RepeatRulesViewModel } from '../../../../../shared/viewmodels/repeat-ru
   templateUrl: './repeat-rules.component.html',
   styleUrls: ['./repeat-rules.component.css']
 })
-export class RepeatRulesComponent implements OnInit {  
+export class RepeatRulesComponent implements OnInit {
   @Input() viewModel: RepeatRulesViewModel = null
 
-  repeatModes = {} 
+  repeatModes = {}
 
   constructor(
     private dateHelper: DateHelperService
-  ) { 
+  ) {
     this.onCheckIfDateIsSelected = this.onCheckIfDateIsSelected.bind(this);
   }
 
   ngOnInit() {
-    this.repeatModes
     for (let mode of this.viewModel.getRepeatModeList()) {
       this.repeatModes[mode.name] = mode.id
     }

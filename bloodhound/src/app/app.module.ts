@@ -3,10 +3,16 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
-import { DateHelperService } from "./services/date-helper.service";
+import { DateHelperService } from './services/date-helper.service';
 
 import { AppComponent } from './app.component';
-import { CalendarComponent, CreateTaskComponent, RepeatRulesComponent } from "./components";
+import {
+  CalendarComponent,
+  CreateTaskComponent,
+  RepeatRulesComponent,
+  DayComponent
+} from './components';
+
 import { WeekComponent } from './components/week/week.component';
 
 @NgModule({
@@ -15,6 +21,7 @@ import { WeekComponent } from './components/week/week.component';
     CalendarComponent,
     CreateTaskComponent,
     RepeatRulesComponent,
+    DayComponent,
     WeekComponent
   ],
   imports: [

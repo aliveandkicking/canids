@@ -14,6 +14,9 @@ class DateUtils {
   }
 
   sameDay (dateOne, dateTwo) {
+    if ((!dateOne) || (!dateTwo)) {
+      return false
+    }
     return ((dateOne.getDate() === dateTwo.getDate()) &&
       (dateOne.getMonth() === dateTwo.getMonth()) &&
       (dateOne.getFullYear() === dateTwo.getFullYear()))
@@ -43,6 +46,14 @@ class DateUtils {
 
   getStartOfMonth (date) {
     return new Date(date.getFullYear(), date.getMonth(), 1)
+  }
+
+  getStartOfWeek (date, mondayBased = true) {
+    return dateUtils.decDay(
+      date,
+      mondayBased
+        ? this.mondayBasedDayOfWeek(date)
+        : date.getDay())
   }
 
   mondayBasedDayOfWeekIdx (index) {

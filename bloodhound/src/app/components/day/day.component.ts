@@ -1,37 +1,24 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, Input } from '@angular/core';
 import { DayService } from '../../services/day.service';
-import { CreateViewModelToken, createViewModel } from '../../services/create-viewmodel.service';
 import { DayViewModel } from '../../../../../shared/viewmodels/day.viewmodel';
 
 @Component({
-  selector: 'day',
+  selector: 'pl-day',
   templateUrl: './day.component.html',
-  styleUrls: ['./day.component.css'],
-  providers: [{ 
-      provide: CreateViewModelToken,
-      useValue: createViewModel(DayViewModel)
-  }]
+  styleUrls: ['./day.component.css']
 })
-export class DayComponent implements OnInit {  
+export class DayComponent implements OnInit {
+  @Input() viewModel: DayViewModel = null;
 
   constructor(
-    @Inject(CreateViewModelToken) private viewModel: DayViewModel    
+
   ) { }
 
-  ngOnInit() {    
-    this.setDate(new Date())
+  ngOnInit() { }
+
+  getDate () {
+    return this.viewModel.getDate();
   }
 
-  getTasksIds(): number[] {
-    return this.viewModel.getTasksIds()
-  }
-
-  getTaskNameById(id: number): string {
-    return this.viewModel.getTaskNameById(id)
-  }
-
-  setDate(date: Date): void {
-    this.viewModel.setDate(date);
-  }
 
 }

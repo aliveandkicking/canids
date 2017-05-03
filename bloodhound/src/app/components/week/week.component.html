@@ -1,7 +1,8 @@
 <table>
   <tr>
-    <td>
-      sssds
+    <td class="day-container"
+      *ngFor="let date of getDates()">
+      <pl-day [viewModel]=getDayViewModel(date)></pl-day>
     </td>
   </tr>
 </table>

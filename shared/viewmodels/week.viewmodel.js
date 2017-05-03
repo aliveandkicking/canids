@@ -1,41 +1,36 @@
-import { TaskModel } from '../models/task.model';
-import { REPEAT_MODE } from '../models/repeat-rules.model';
+import { WeekModel } from '../models/week.model';
+import { dateUtils } from '../utils/dateutils';
+import { DayViewModel } from './day.viewmodel';
 
 export class WeekViewModel {
   constructor () {
-    this._model = new TaskModel()
+    this._model = new WeekModel()
+    this.days = []
+    this._initDays()
   }
 
-  getTaskName () {
-    return this._model.name
+  _initDays() {
+    this.getDates().forEach((date, i) => {
+      if (!this.days[i]) {
+        this.days[i] = new DayViewModel()
+      }
+      this.days[i].setDate(date)
+    })
   }
 
-  setTaskName (name) {
-    this._model.name = name
+  getDates() {
+    return this._model.getDates()
   }
 
-  getStartDate () {
-    return this._model.date
+  setDate(date) {
+    this._model.setDate(date)
+    this._initDays()
   }
 
-  setStartDate (date) {
-    this._model.date = date
-    if (this._model.repeatRules) {
-      this._model.repeatRules.setStartDate(date)
-    }
+  getDayViewModel(date) {
+    return this.days.find((viewModel) => {
+      return dateUtils.sameDay(viewModel.getDate(), date)
+    })
   }
 
-  setRepeat (repeat) {
-    this._model.setRepeat(repeat)
-  }
-
-  getRepeatOptions () {
-    return [
-      {name: 'Do not repeat', index: null},
-      {name: 'Daily', index: REPEAT_MODE.DAILY},
-      {name: 'Weekly', index: REPEAT_MODE.WEEKLY},
-      {name: 'Monthly', index: REPEAT_MODE.MONTHLY},
-      {name: 'Yearly', index: REPEAT_MODE.YEARLY}
-    ]
-  }
 }
