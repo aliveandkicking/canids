@@ -1,7 +1,7 @@
-import { RepeatRulesModel } from './repeat-rules.model'
-import { BaseModel } from './base.model'
+let RepeatRulesModel = require('./repeat-rules.model').RepeatRulesModel
+let BaseModel = require('./base.model').BaseModel
 
-export class TaskModel extends BaseModel {
+class TaskModel extends BaseModel {
   constructor () {
     super()
     this.id = null
@@ -14,10 +14,5 @@ export class TaskModel extends BaseModel {
     return this
   }
 }
-// biktop
-export const tasksTemp = [
-  new TaskModel().setName('do smth'),
-  new TaskModel().setName('save the world'),
-  new TaskModel().setName('cure cancer'),
-  new TaskModel().setName('kill hope')
-]
+
+module.exports.TaskModel = TaskModel

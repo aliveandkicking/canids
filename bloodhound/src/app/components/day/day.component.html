@@ -1,12 +1,13 @@
 <div class="root">
   <div class="header">
     {{getDate() | date:'yyyy-MM-dd'}}
+    {{names}}
   </div>
 
   <div class="body">
     <ul>
-      <li>
-
+      <li *ngFor="let name of getTasks()">
+        {{name}}
       </li>
     </ul>
   </div>

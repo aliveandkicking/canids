@@ -1,15 +1,16 @@
-let load = require('./load.handler').load
+let retrieveTasks = require('../cache/task.cache').retrieveTasks
+let dateUtils = require('../../../shared/utils/dateutils').dateUtils
 
 module.exports = function (req, res){
-
-  load(req.body.entity, req.body.ids, (rows) => {
-      
-    res.send(rows)
-
-  })
+  console.dir(req.body)
+  let date = dateUtils.fromString(req.body.date)
+  retrieveTasks((tasks) => {
+    let result = []
+    tasks.forEach((task) => {
+      if (task.repeatRules.containsDate(date)) {
+        result.push(task.toJson())
+      }
+    });
+    res.send(result)
+  });
 }
-
-module.exports.load = load
-
-
-

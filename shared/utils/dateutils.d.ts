@@ -1,4 +1,5 @@
 interface DateUtils {
+  DATE_SEPARATOR: string,
   MILISECONDS_IN_DAY: number,
   SU: number,
   MO: number,
@@ -27,7 +28,10 @@ interface DateUtils {
   mondayBasedDayOfWeek (date: Date): number,
   getDaysBetween (startDate: Date, endDate: Date): number,
   encodeDate (date: Date): number[],
-  clearTime (date: Date): Date
+  clearTime (date: Date): Date,
+  getElementAsString(element: integer): string,
+  toString(date: Date): string,
+  fromString(dateString: string): Date
 }
 
 export declare let dateUtils: DateUtils;

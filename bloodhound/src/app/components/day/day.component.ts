@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject, Input, NgZone } from '@angular/core';
 import { DayService } from '../../services/day.service';
 import { DayViewModel } from '../../../../../shared/viewmodels/day.viewmodel';
 
@@ -7,18 +7,34 @@ import { DayViewModel } from '../../../../../shared/viewmodels/day.viewmodel';
   templateUrl: './day.component.html',
   styleUrls: ['./day.component.css']
 })
-export class DayComponent implements OnInit {
+export class DayComponent implements OnInit, OnDestroy {
   @Input() viewModel: DayViewModel = null;
+  loaded = false;
 
   constructor(
-
+    private zone: NgZone
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.viewModel.subscribeForTaskListChange(() => {
+      this.loaded = true;
+      this.zone.run(() => {}); // biktop. investigate
+    });
+  }
+
+  ngOnDestroy() {
+    this.viewModel.finalize();
+  }
 
   getDate () {
     return this.viewModel.getDate();
   }
 
+  getTasks(): string[] {
+    const names = this.viewModel.getTasksNames();
+    console.log('names', names);
+    return names;
+  }
 
 }
+

@@ -1,7 +1,7 @@
-import { dateUtils } from '../utils/dateutils'
-import { BaseModel } from './base.model'
+const dateUtils = require('../utils/dateutils').dateUtils
+const BaseModel = require( './base.model').BaseModel
 
-export const REPEAT_MODE = {
+const REPEAT_MODE = {
   ONCE: 0,
   DAILY: 1,
   WEEKLY: 2,
@@ -34,14 +34,14 @@ class MonthlyRules extends BaseRules {
 
 class YearlyRules extends BaseRules {}
 
-export class RepeatRulesModel extends BaseModel {
+class RepeatRulesModel extends BaseModel {
   constructor () {
     super()
     this._mode = REPEAT_MODE.ONCE
-    this.dailyRules = null
-    this.weeklyRules = null
-    this.monthlyRules = null
-    this.yearlyRules = null
+    this.dailyRules = new DailyRules()
+    this.weeklyRules = new WeeklyRules()
+    this.monthlyRules = new MonthlyRules()
+    this.yearlyRules = new YearlyRules()
 
     this._mondayBased = true
     this._startDate = dateUtils.clearTime(new Date())
@@ -91,7 +91,7 @@ export class RepeatRulesModel extends BaseModel {
   }
 
   setRepeatMode (mode) {
-    if (REPEAT_MODE.ALLOWED.includes(mode)) {
+    if (REPEAT_MODE.ALLOWED.includes(mode)) { // biktop
       this._mode = mode
       if ((this._mode === REPEAT_MODE.DAILY) && (!this.dailyRules)) {
         this.dailyRules = new DailyRules()
@@ -192,3 +192,6 @@ export class RepeatRulesModel extends BaseModel {
   }
 
 }
+
+module.exports.REPEAT_MODE = REPEAT_MODE
+module.exports.RepeatRulesModel = RepeatRulesModel

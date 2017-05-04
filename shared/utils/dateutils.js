@@ -1,5 +1,6 @@
 class DateUtils {
   constructor () {
+    this.DATE_SEPARATOR = '/'
     this.MILISECONDS_IN_DAY = 24 * 60 * 60 * 1000; // consider timezones change e.g. last sun of oct
 
     [this.SU, this.MO, this.TU, this.WE, this.TH, this.FR, this.SA] = [0, 1, 2, 3, 4, 5, 6]
@@ -23,15 +24,15 @@ class DateUtils {
   }
 
   isToday (date) {
-    return dateUtils.sameDay(new Date(), date)
+    return this.sameDay(new Date(), date)
   }
 
   sameDayOrBefore (date, dateToCompare) {
-    return (dateUtils.sameDay(date, dateToCompare) || (date > dateToCompare))
+    return (this.sameDay(date, dateToCompare) || (date > dateToCompare))
   }
 
   sameDayOrAfter (date, dateToCompare) {
-    return (dateUtils.sameDay(date, dateToCompare) || (date < dateToCompare))
+    return (this.sameDay(date, dateToCompare) || (date < dateToCompare))
   }
 
   incDay (date, numberOfDays = 1) {
@@ -49,7 +50,7 @@ class DateUtils {
   }
 
   getStartOfWeek (date, mondayBased = true) {
-    return dateUtils.decDay(
+    return this.decDay(
       date,
       mondayBased
         ? this.mondayBasedDayOfWeek(date)
@@ -61,7 +62,7 @@ class DateUtils {
   }
 
   mondayBasedDayOfWeek (date) {
-    return dateUtils.mondayBasedDayOfWeekIdx(date.getDay())
+    return this.mondayBasedDayOfWeekIdx(date.getDay())
   }
 
   getUTCTime (date) {
@@ -70,7 +71,7 @@ class DateUtils {
 
   getDaysBetween (startDate, endDate) {
     return Math.abs(Math.floor(
-      (this.getUTCTime(endDate) - this.getUTCTime(startDate)) / dateUtils.MILISECONDS_IN_DAY))
+      (this.getUTCTime(endDate) - this.getUTCTime(startDate)) / this.MILISECONDS_IN_DAY))
   }
 
   encodeDate (date) {
@@ -78,9 +79,21 @@ class DateUtils {
   }
 
   clearTime (date) {
-    return new Date(...dateUtils.encodeDate(date))
+    return new Date(...this.encodeDate(date))
+  }
+
+  getElementAsString(element) {
+    return (element > 9) ? element : '0' + element;
+  }
+
+  toString(date) {
+    return [this.getElementAsString(date.getMonth() + 1), this.getElementAsString(date.getDate()), date.getFullYear()].join(this.DATE_SEPARATOR)
+  }
+
+  fromString(dateString) {
+    let dateData = dateString.split(this.DATE_SEPARATOR)
+    return new Date(dateData[2], dateData[0], dateData[1])
   }
 }
 
-export const dateUtils = new DateUtils()
-
+module.exports.dateUtils = new DateUtils()

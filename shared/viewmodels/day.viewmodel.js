@@ -13,4 +13,15 @@ export class DayViewModel{
     return this._model.getDate()
   }
 
+  getTasksNames() {
+    return this._model.tasks.map((el) => el.name)
+  }
+
+  finalize() {
+    this._model.onTaskListChangeEvents = [] // biktop
+  }
+
+  subscribeForTaskListChange(callback) {
+    this._model.onTaskListChangeEvents.push(callback)
+  }
 }

@@ -2,13 +2,11 @@ import Request from './request'
 import Notification from './notification'
 
 const requests = [
-  'getTaskListByDate',
-  'getFullTaskList'
+
 ]
 
 const notifications = [
-  'attempToAddDateToTask',
-  'taskDatesChanged'
+  'registerEntity'
 ]
 
 class RequestList {
