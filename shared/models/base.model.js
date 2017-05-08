@@ -2,6 +2,10 @@ let serverApi = require('../server-api').serverApi;
 let transportObjectProcessor = require('../transport-object-processor').transportObjectProcessor;
 
 class BaseModel {
+  constructor(){
+    this.id = null
+  }
+
   save () {
     serverApi.save(this, null)
   }

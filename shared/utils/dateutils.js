@@ -71,7 +71,9 @@ class DateUtils {
 
   getDaysBetween (startDate, endDate) {
     return Math.abs(Math.floor(
-      (this.getUTCTime(endDate) - this.getUTCTime(startDate)) / this.MILISECONDS_IN_DAY))
+      (Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate()) -
+      Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate())) /
+      this.MILISECONDS_IN_DAY))
   }
 
   encodeDate (date) {
@@ -92,7 +94,7 @@ class DateUtils {
 
   fromString(dateString) {
     let dateData = dateString.split(this.DATE_SEPARATOR)
-    return new Date(dateData[2], dateData[0], dateData[1])
+    return new Date(dateData[2], parseInt(dateData[0]) - 1, dateData[1])
   }
 }
 

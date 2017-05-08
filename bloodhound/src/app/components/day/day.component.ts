@@ -9,7 +9,6 @@ import { DayViewModel } from '../../../../../shared/viewmodels/day.viewmodel';
 })
 export class DayComponent implements OnInit, OnDestroy {
   @Input() viewModel: DayViewModel = null;
-  loaded = false;
 
   constructor(
     private zone: NgZone
@@ -17,7 +16,6 @@ export class DayComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.viewModel.subscribeForTaskListChange(() => {
-      this.loaded = true;
       this.zone.run(() => {}); // biktop. investigate
     });
   }

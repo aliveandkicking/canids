@@ -46,11 +46,18 @@ class RepeatRulesModel extends BaseModel {
     this._mondayBased = true
     this._startDate = dateUtils.clearTime(new Date())
     this._endDate = dateUtils.clearTime(new Date())
+    this._skipDates = []
     this.neverEnd = true
+
+    this.addSkipDate(new Date())
   }
 
   setMondayBased (mondayBased) {
     this._mondayBased = mondayBased
+  }
+
+  addSkipDate (date) {
+    this._skipDates.push(dateUtils.clearTime(date).getTime())
   }
 
   getStartDate () {
@@ -174,7 +181,9 @@ class RepeatRulesModel extends BaseModel {
       return false
     }
     date = dateUtils.clearTime(date)
-    if (date.getTime() === this._startDate.getTime()) {
+    if (this._skipDates.includes(date.getTime())) {
+      return false
+    } else if (date.getTime() === this._startDate.getTime()) {
       return true
     } else if (!this._checkPeriod(date)) {
       return false

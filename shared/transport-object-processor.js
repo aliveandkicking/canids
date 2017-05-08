@@ -19,8 +19,7 @@ class TransportObjectProcessor {
         for (let key in tempObject) {
             if (tempObject.hasOwnProperty(key)) {
                 if (object[key] instanceof Date) {
-                    let dataArray = tempObject[key].split('/') // biktop
-                    object[key] = new Date(dataArray[2], dataArray[0], dataArray[1])
+                    object[key] = dateUtils.fromString(tempObject[key])
                 } else if (object[key] instanceof Object) {
                         this.loadFromTempObject(tempObject[key], object[key])
                 } else {

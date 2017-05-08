@@ -7,6 +7,7 @@ export default class DayModel {
     this.tasks = []
     this._date = null
     this.onTaskListChangeEvents = []
+    this.doneTasksIds = []
   }
 
   setDate(date) {
@@ -37,5 +38,20 @@ export default class DayModel {
       });
       this.tasksRetrieved();
     })
+  }
+
+  markAsDone(task) {
+    if ((task) && (!this.doneTasksIds.includes(task.id))) {
+      this.doneTasksIds.push(task.id)
+    }
+  }
+
+  unmarkAsDone(task) {
+    if (task) {
+      let index = this.doneTasksIds.indexOf(task.id)
+      if (index >= 0) {
+        this.doneTaskIds.splice(index, 0)
+      }
+    }
   }
 }

@@ -31,9 +31,12 @@ CREATE TABLE data (
 DROP FUNCTION IF EXISTS _is_json_object(a_data jsonb);
 
 CREATE FUNCTION _is_json_object(a_data jsonb) RETURNS boolean AS $$	
+DECLARE
+	l_as_text text;
 BEGIN	
-	RETURN (position('{' in a_data::text) = 1) AND 
-		(position('}' in a_data::text) = length(a_data::text));
+	l_as_text := a_data::text;
+	RETURN (substring(l_as_text, 1, 1) = '{') AND
+		(substring(l_as_text, length(l_as_text), 1) = '}');	
 END;$$ 
 LANGUAGE plpgsql;
 
@@ -42,9 +45,12 @@ LANGUAGE plpgsql;
 DROP FUNCTION IF EXISTS _is_json_array(a_data jsonb);
 
 CREATE FUNCTION _is_json_array(a_data jsonb) RETURNS boolean AS $$	
+DECLARE
+	l_as_text text;
 BEGIN	
-	RETURN (position('[' in a_data::text) = 1) AND 
-		(position(']' in a_data::text) = length(a_data::text));
+	l_as_text := a_data::text;
+	RETURN (substring(l_as_text, 1, 1) = '[') AND
+		(substring(l_as_text, length(l_as_text), 1) = ']');	
 END;$$ 
 LANGUAGE plpgsql;
 
@@ -53,8 +59,8 @@ LANGUAGE plpgsql;
 DROP FUNCTION IF EXISTS _save_value(a_data jsonb);
 
 CREATE FUNCTION _save_value(a_data jsonb) RETURNS jsonb AS $$	
-BEGIN	
-	IF (_is_json_object(a_data)) THEN
+BEGIN		
+	IF (_is_json_object(a_data)) THEN		
 		RETURN _save_as_object(a_data);
 	ELSEIF (_is_json_array(a_data)) THEN
 		RETURN _save_as_array(a_data);
