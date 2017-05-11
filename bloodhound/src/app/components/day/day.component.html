@@ -5,11 +5,9 @@
   </div>
 
   <div class="body">
-    <ul>
-      <li *ngFor="let name of getTasks()">
-        {{name}}
-      </li>
-    </ul>
+      <div *ngFor="let taskViewModel of getTasksViewModels()">
+        <app-day-task [viewModel]="taskViewModel"></app-day-task>
+      </div>
   </div>
 </div>
 

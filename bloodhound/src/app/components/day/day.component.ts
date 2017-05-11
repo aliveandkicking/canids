@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, Inject, Input, NgZone } from '@angular/core';
 import { DayService } from '../../services/day.service';
 import { DayViewModel } from '../../../../../shared/viewmodels/day.viewmodel';
+import { DayTaskViewModel } from '../../../../../shared/viewmodels/day-task.viewmodel';
 
 @Component({
   selector: 'pl-day',
@@ -15,7 +16,7 @@ export class DayComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.viewModel.subscribeForTaskListChange(() => {
+    this.viewModel.setOnTaskListChange(() => {
       this.zone.run(() => {}); // biktop. investigate
     });
   }
@@ -28,11 +29,10 @@ export class DayComponent implements OnInit, OnDestroy {
     return this.viewModel.getDate();
   }
 
-  getTasks(): string[] {
-    const names = this.viewModel.getTasksNames();
-    console.log('names', names);
-    return names;
+  getTasksViewModels(): DayTaskViewModel[] {
+    let result = this.viewModel.getDayTasksViewModels();
+    console.log(this.getDate(), result);
+    return result;
   }
 
 }
-

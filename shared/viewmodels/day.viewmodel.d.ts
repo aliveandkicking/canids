@@ -1,7 +1,9 @@
+import { DayTaskViewModel } from './day-task.viewmodel';
+
 export declare class DayViewModel{
     getDate(): Date;
     setDate(date: Date): void;
-    getTasksNames(): string[];
+    getDayTasksViewModels(): DayTaskViewModel[];
     finalize(): void;
-    subscribeForTaskListChange(callback: () => void): void;
+    setOnTaskListChange(callback: () => void): void;
 }

@@ -1,18 +1,18 @@
-import { TaskModel } from './task.model'
-import { dateUtils } from '../utils/dateutils';
-let serverApi = require('../server-api').serverApi
+const DayTaskModel = require('./day-task.model').DayTaskModel
+const TaskModel = require('./task.model').TaskModel
+const dateUtils = require('../utils/dateutils').dateUtils
+const serverApi = require('../server-api').serverApi
 
 export default class DayModel {
   constructor() {
-    this.tasks = []
+    this.dayTasks = []
     this._date = null
-    this.onTaskListChangeEvents = []
-    this.doneTasksIds = []
+    this.onTaskListChangeEvents = [] // biktop is array realy needed ?
   }
 
   setDate(date) {
     if (!dateUtils.sameDay(date, this._date)) {
-      this._date = date
+      this._date = dateUtils.clearTime(date)
       this.retrieveTasks()
     }
   }
@@ -22,36 +22,22 @@ export default class DayModel {
   }
 
   tasksRetrieved() {
-    console.dir(this.tasks)
     this.onTaskListChangeEvents.forEach((callback) => {
-      callback()
+      if (callback) {
+        callback()
+      }
     })
   }
 
   retrieveTasks() {
     serverApi.getTasksById(this._date, (responseText) => {
-      this.tasks = []
+      this.dayTasks = []
       let transObjs = JSON.parse(responseText)
       transObjs.forEach((obj) => {
           let task = new TaskModel()
-          this.tasks.push(task.loadFromTransportObject(obj))
+          this.dayTasks.push(new DayTaskModel(task.loadFromTransportObject(obj)))
       });
       this.tasksRetrieved();
     })
-  }
-
-  markAsDone(task) {
-    if ((task) && (!this.doneTasksIds.includes(task.id))) {
-      this.doneTasksIds.push(task.id)
-    }
-  }
-
-  unmarkAsDone(task) {
-    if (task) {
-      let index = this.doneTasksIds.indexOf(task.id)
-      if (index >= 0) {
-        this.doneTaskIds.splice(index, 0)
-      }
-    }
   }
 }

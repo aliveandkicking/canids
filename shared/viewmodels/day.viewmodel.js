@@ -1,8 +1,12 @@
 import DayModel from '../models/day.model';
+import { DayTaskViewModel } from './day-task.viewmodel';
 
 export class DayViewModel{
   constructor() {
     this._model = new DayModel()
+    this.dayTasksViewModels = []
+    this.onTaskListChange = null
+    this._model.onTaskListChangeEvents.push(() => this.initTaskViewModels())
   }
 
   setDate(date) {
@@ -13,15 +17,22 @@ export class DayViewModel{
     return this._model.getDate()
   }
 
-  getTasksNames() {
-    return this._model.tasks.map((el) => el.name)
+  initTaskViewModels() {
+    this.dayTasksViewModels = this._model.dayTasks.map(dayTask => new DayTaskViewModel(dayTask))
+    if (this.onTaskListChange) {
+      this.onTaskListChange()
+    }
+  }
+
+  getDayTasksViewModels() {
+    return this.dayTasksViewModels
   }
 
   finalize() {
-    this._model.onTaskListChangeEvents = [] // biktop
+    this.onTaskListChange = null
   }
 
-  subscribeForTaskListChange(callback) {
-    this._model.onTaskListChangeEvents.push(callback)
+  setOnTaskListChange(callback) {
+    this.onTaskListChange = callback
   }
 }

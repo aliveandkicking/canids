@@ -14,6 +14,7 @@ import {
 } from './components';
 
 import { WeekComponent } from './components/week/week.component';
+import { DayTaskComponent } from './components/day-task/day-task.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { WeekComponent } from './components/week/week.component';
     CreateTaskComponent,
     RepeatRulesComponent,
     DayComponent,
-    WeekComponent
+    WeekComponent,
+    DayTaskComponent
   ],
   imports: [
     BrowserModule,

@@ -49,7 +49,7 @@ class RepeatRulesModel extends BaseModel {
     this._skipDates = []
     this.neverEnd = true
 
-    this.addSkipDate(new Date())
+    // this.addSkipDate(new Date())
   }
 
   setMondayBased (mondayBased) {
