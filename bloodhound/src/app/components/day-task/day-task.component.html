@@ -1,5 +1,7 @@
-<div>
-  {{getTaskName()}}
+<div class="root" (dblclick)="changeState()">
+  <div class="task-name">
+    {{getTaskName()}}
+  </div>
   <div class="check-mark" (click)="changeState()">
     {{isDone()}}
   </div>

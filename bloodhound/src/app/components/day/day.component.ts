@@ -30,9 +30,7 @@ export class DayComponent implements OnInit, OnDestroy {
   }
 
   getTasksViewModels(): DayTaskViewModel[] {
-    let result = this.viewModel.getDayTasksViewModels();
-    console.log(this.getDate(), result);
-    return result;
+    return this.viewModel.getDayTasksViewModels();
   }
 
 }
