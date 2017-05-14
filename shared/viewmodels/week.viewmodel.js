@@ -1,6 +1,6 @@
-import { WeekModel } from '../models/week.model';
-import { dateUtils } from '../utils/dateutils';
-import { DayViewModel } from './day.viewmodel';
+import { WeekModel } from '../models/week.model'
+import { dateUtils } from '../utils/dateutils'
+import { DayViewModel } from './day.viewmodel'
 
 export class WeekViewModel {
   constructor () {
@@ -9,7 +9,7 @@ export class WeekViewModel {
     this._initDays()
   }
 
-  _initDays() {
+  _initDays () {
     this.getDates().forEach((date, i) => {
       if (!this.days[i]) {
         this.days[i] = new DayViewModel()
@@ -18,16 +18,28 @@ export class WeekViewModel {
     })
   }
 
-  getDates() {
+  getDates () {
     return this._model.getDates()
   }
 
-  setDate(date) {
+  setDate (date) {
     this._model.setDate(date)
     this._initDays()
   }
 
-  getDayViewModel(date) {
+  today () {
+    this._model.setDate(new Date())
+  }
+
+  next () {
+    this._model.next()
+  }
+
+  prev () {
+    this._model.prev()
+  }
+
+  getDayViewModel (date) {
     return this.days.find((viewModel) => {
       return dateUtils.sameDay(viewModel.getDate(), date)
     })

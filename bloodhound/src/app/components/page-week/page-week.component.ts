@@ -19,4 +19,16 @@ export class PageWeekComponent implements OnInit {
   goToNewTaskPage() {
     this.editTaskService.createTask();
   }
+
+  today() {
+
+  }
+
+  next() {
+
+  }
+
+  prev() {
+
+  }
 }
