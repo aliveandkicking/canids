@@ -2,16 +2,16 @@
   <button (click)="goToNewTaskPage()">
     New Task
   </button>
-  <button (click)="today()">
+  <button (click)="appweek.today()">
     Today
   </button>
-  <button (click)="prev()">
+  <button (click)="appweek.prev()">
     <
   </button>
-  <button (click)="next()">
+  <button (click)="appweek.next()">
     >
   </button>
 </div>
 <div class="content">
-  <app-week></app-week>
+  <app-week #appweek></app-week>
 </div>

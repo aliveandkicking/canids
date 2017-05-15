@@ -30,7 +30,7 @@ export default class DayModel {
   }
 
   retrieveTasks() {
-    serverApi.getTasksById(this._date, (responseText) => {
+    serverApi.getTasksByDate(this._date, (responseText) => {
       this.dayTasks = []
       let transObjs = JSON.parse(responseText)
       transObjs.forEach((obj) => {

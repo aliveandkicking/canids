@@ -30,4 +30,16 @@ export class WeekComponent implements OnInit {
     return this.viewModel.getDayViewModel(date);
   }
 
+  next(): void {
+    this.viewModel.next();
+  }
+
+  prev(): void {
+    this.viewModel.prev();
+  }
+
+  today(): void {
+    this.viewModel.today();
+  }
+
 }

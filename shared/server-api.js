@@ -18,7 +18,7 @@ class ServerApi {
         anHttpRequest.open("POST", constants.SERVER_URL + constants.SEPARATOR + route, true) // biktop proper path building
         anHttpRequest.setRequestHeader('Access-Control-Allow-Origin', '*')
         anHttpRequest.setRequestHeader('Content-type', 'application/json')
-        anHttpRequest.send(transportObjectProcessor.buildJsonString(object))
+        anHttpRequest.send(this._buildJsonString(object))
     }
 
     save (object, callback) {
@@ -27,6 +27,7 @@ class ServerApi {
 
     load (args, callback, object) {
         this.post(constants.LOAD, args, function(responceText) {
+            this._loadFromTransportObject(object, transportObjectProcessor.getTransportObject(responceText))
             transportObjectProcessor.loadFromJsonString(responceText, object)
             if (callback) {
                 callback(anHttpRequest.responseText);
@@ -34,8 +35,22 @@ class ServerApi {
         } )
     }
 
-    getTasksById(date, callback) {
+    getTasksByDate (date, callback) {
         this.post(constants.TASK + constants.SEPARATOR + constants.GETBYDATE, {date: dateUtils.toString(date)}, callback)
+    }
+
+    _buildJsonString (object) {
+        if (object.toJson) {
+            return object.toJson()
+        }
+        return transportObjectProcessor.buildJsonString(object)
+    }
+
+    _loadFromTransportObject (object, transportObject) {
+        if (object.loadFromTransportObject) {
+            object.loadFromTransportObject(transportObject)
+        }
+        transportObjectProcessor.loadFromTempObject(object, transportObject)
     }
 }
 

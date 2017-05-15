@@ -31,4 +31,8 @@ export class PageWeekComponent implements OnInit {
   prev() {
 
   }
+
+  log(el: any) {
+    console.dir(el);
+  }
 }

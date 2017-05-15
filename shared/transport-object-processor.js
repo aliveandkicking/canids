@@ -8,11 +8,15 @@ class TransportObjectProcessor {
         return json
     }
 
-    loadFromJsonString (jsonString, object) {
-        laodFromTempObject(JSON.parse(jsonString), object)
+    getTransportObject(jsonString) {
+        return JSON.parse(jsonString)
     }
 
-    loadFromTempObject(tempObject, object) {
+    loadFromJsonString (jsonString, object) {
+        this.loadFromTempObject(object, this.getTransportObject(jsonString))
+    }
+
+    loadFromTempObject(object, tempObject) {
         if (!tempObject) {
             return
         }

@@ -29,14 +29,17 @@ export class WeekViewModel {
 
   today () {
     this._model.setDate(new Date())
+    this._initDays()
   }
 
   next () {
     this._model.next()
+    this._initDays()
   }
 
   prev () {
     this._model.prev()
+    this._initDays()
   }
 
   getDayViewModel (date) {
