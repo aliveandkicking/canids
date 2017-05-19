@@ -24,12 +24,16 @@ export class CalendarComponent implements OnInit {
     this.viewModel.setOnDateActivated(this.onDateClick);
   }
 
-  getCurrentDates(): Date[][]{
+  getCurrentDates(): Date[][] {
     return this.viewModel.getCurrentDates();
   }
 
-  getWeekDays(): {index: number; name: string}[][] {
+  getWeekDays(): number[] {
     return this.viewModel.getWeekDays();
+  }
+
+  getDayName(dayIndex: number): string {
+    return this.viewModel.getDayName(dayIndex)
   }
 
   onNext(): void {

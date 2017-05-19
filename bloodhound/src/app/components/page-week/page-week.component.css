@@ -1,0 +1,36 @@
+.root {
+    min-width: 300px;
+}
+
+.header {
+    height: 50px;
+    background-color: deepskyblue;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.new-task-button, .navigation-button, .today-button {
+    margin: 5px -2px;
+    height: 40px;
+    width: 40px;
+}
+
+.navigation-buttons-containter{
+    display: inline;
+    margin-right: 5px;
+}
+
+.new-task-button {
+    width: 40px;
+    margin-left: 5px
+}
+
+.today-button {
+    width: 75px;
+    margin-right: 5px
+}
+
+/*.navigation-button {
+
+}*/

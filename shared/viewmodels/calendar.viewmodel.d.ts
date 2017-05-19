@@ -1,8 +1,11 @@
 export declare class CalendarViewModel {
   getCurrentYear(): number; 
   getCurrentDates(): Date[][];
-  getWeekDays(): {index: number; name: string}[][];
-  getCurrentMonth(): number; 
+
+  getWeekDays(): number[];
+  getDayName (dayIndex: number): string;
+
+  getCurrentMonth(): number;
   setCurrentMonth(month: number): void;
 
   getCurrentMonthName(): string;

@@ -1,9 +1,9 @@
 import { dateUtils } from '../utils/dateutils';
 
 export class CalendarModel {
-  constructor() {
-      this._mondayBased = true
-      this.setMondayBased(true)
+  constructor () {
+    this._mondayBased = true
+    this.setMondayBased(true)
   }
 
   getDayNames () {
@@ -16,12 +16,16 @@ export class CalendarModel {
 
   }
 
-  setMondayBased(mondayBased){
-      this._mondayBased = mondayBased
+  setMondayBased (mondayBased) {
+    this._mondayBased = mondayBased
   }
 
-  getWeekDayIndex (weekDay) {
-    return this._mondayBased ? dateUtils.mondayBasedDayOfWeekIdx(weekDay) : weekDay
+  getWeekDays () {
+    return this._mondayBased ? dateUtils.DAYS_OF_WEEK_MONDAY_BASED : dateUtils.DAYS_OF_WEEK
+  }
+
+  getDayName (dayIndex) {
+    return dateUtils.DAY_NAMES[dayIndex]
   }
 
   getLastWeekStart (year, month) {

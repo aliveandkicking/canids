@@ -1,4 +1,4 @@
-import { dateUtils } from '../utils/dateutils';   
+import { dateUtils } from '../utils/dateutils';
 import { CalendarModel } from '../models/calendar.model';
 
 export class CalendarViewModel {
@@ -15,7 +15,7 @@ export class CalendarViewModel {
 
     this._onCheckIfDateIsSelected = null
     this._onDateActivated = null
-  } 
+  }
 
   getCurrentYear () {
     return this._currentYear
@@ -24,11 +24,11 @@ export class CalendarViewModel {
   getCurrentDates () {
     if (this._needRecalcDates) {
       this._currentDates = this._model.getDates(this._currentYear, this._currentMonth, this._numberOfWeeksOnPage)
-    }    
+    }
     return this._currentDates
   }
 
-  setMonthMode (isMonthMode){
+  setMonthMode (isMonthMode) {
     this._isMonthMode = isMonthMode
   }
 
@@ -55,11 +55,11 @@ export class CalendarViewModel {
     this._needRecalcDates = true
   }
 
-  getCurrentMonthName() {
+  getCurrentMonthName () {
     return dateUtils.MONTH_NAMES[this._currentMonth]
   }
 
-  getMonths() {
+  getMonths () {
     let result = []
     let row = []
     for (let i = 0; i < dateUtils.MONTH_NAMES_SHORT.length; i++) {
@@ -75,59 +75,59 @@ export class CalendarViewModel {
       result.push(row)
     }
     return result
-  }  
-
-  getWeekDays() {
-    return ( //biktop finished here
-      (this._model._mondayBased
-        ? dateUtils.DAYS_OF_WEEK_MONDAY_BASED
-        : dateUtils.DAYS_OF_WEEK).map(el => dateUtils.DAY_NAMES[el])
-    )
   }
 
-  next() {
+  getWeekDays () {
+    return this._model.getWeekDays()
+  }
+
+  getDayName (dayIndex) {
+    return this._model.getDayName(dayIndex)
+  }
+
+  next () {
     if (this._isMonthMode) {
-      this._currentYear++            
+      this._currentYear++
     } else {
-      let { month, year } = this._model.incMonth(this._currentMonth, this._currentYear)    
+      let { month, year } = this._model.incMonth(this._currentMonth, this._currentYear)
       this._currentMonth = month
       this._currentYear = year
-    }  
+    }
     this._needRecalcDates = true
   }
 
-  prev() {
+  prev () {
     if (this._isMonthMode) {
-      this._currentYear--            
+      this._currentYear--
     } else {
-      let { month, year } = this._model.decMonth(this._currentMonth, this._currentYear)    
+      let { month, year } = this._model.decMonth(this._currentMonth, this._currentYear)
       this._currentMonth = month
       this._currentYear = year
-    }  
+    }
     this._needRecalcDates = true
   }
 
-  dateActivated(date) {    
+  dateActivated (date) {
     if (this._onDateActivated) {
       this._onDateActivated(date)
     }
   }
 
-  dateIsSelected(date) {
-    return(
+  dateIsSelected (date) {
+    return (
       this._onCheckIfDateIsSelected ? this._onCheckIfDateIsSelected(date) : false)
-  } 
+  }
 
-  monthActivated(month) {
+  monthActivated (month) {
     this.setCurrentMonth(month)
     this.setMonthMode(false)
   }
 
-  setOnCheckIfDateIsSelected(event) {
+  setOnCheckIfDateIsSelected (event) {
     this._onCheckIfDateIsSelected = event
   }
 
-  setOnDateActivated(event) {
+  setOnDateActivated (event) {
     this._onDateActivated = event
   }
 }

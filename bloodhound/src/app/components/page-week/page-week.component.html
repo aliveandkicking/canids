@@ -1,17 +1,22 @@
-<div class="header">
-  <button (click)="goToNewTaskPage()">
-    New Task
-  </button>
-  <button (click)="appweek.today()">
-    Today
-  </button>
-  <button (click)="appweek.prev()">
-    <
-  </button>
-  <button (click)="appweek.next()">
-    >
-  </button>
-</div>
-<div class="content">
-  <app-week #appweek></app-week>
+<div class="root">
+  <div class="header">
+    <button class="new-task-button" (click)="goToNewTaskPage()">
+      +
+    </button>
+
+    <div class="navigation-buttons-containter">
+      <button class="today-button" (click)="appweek.today()">
+        Today
+      </button>
+      <button class="navigation-button" (click)="appweek.prev()">
+        <
+      </button>
+      <button class="navigation-button" (click)="appweek.next()">
+        >
+      </button>
+    </div>
+  </div>
+  <div class="content">
+    <app-week #appweek></app-week>
+  </div>
 </div>
