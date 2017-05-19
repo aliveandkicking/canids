@@ -13,7 +13,7 @@ export default class DayModel {
   setDate(date) {
     if (!dateUtils.sameDay(date, this._date)) {
       this._date = dateUtils.clearTime(date)
-      this.retrieveTasks()
+      this.load()
     }
   }
 
@@ -21,7 +21,7 @@ export default class DayModel {
     return this._date
   }
 
-  tasksRetrieved() {
+  loaded() {
     this.onTaskListChangeEvents.forEach((callback) => {
       if (callback) {
         callback()
@@ -29,15 +29,44 @@ export default class DayModel {
     })
   }
 
-  retrieveTasks() {
-    serverApi.getTasksByDate(this._date, (responseText) => {
-      this.dayTasks = []
-      let transObjs = JSON.parse(responseText)
-      transObjs.forEach((obj) => {
+  retrieveTasks(callback) {
+    serverApi.getTasksByDate(this._date).
+      then((transObjs) => {
+        this.dayTasks = []
+        transObjs.forEach((obj) => {
           let task = new TaskModel()
-          this.dayTasks.push(new DayTaskModel(task.loadFromTransportObject(obj)))
-      });
-      this.tasksRetrieved();
+          this.dayTasks.push(new DayTaskModel(task.loadFromTransportObject(obj), () => {
+            this.save()
+          }))
+      })
+      callback()
+    })
+  }
+
+  save() {
+    let tasks = []
+    this.dayTasks.forEach(dayTask => {
+      tasks.push({ taskId: dayTask.taskModel.id, isDone: dayTask.getIsDone() ? 1 : 0 })
+    })
+    let id = dateUtils.toString(this.getDate())
+    serverApi.save({id: id, entity: this.constructor.name, tasks: tasks})
+  }
+
+  load() {
+    this.retrieveTasks(() => {
+      let id = dateUtils.toString(this.getDate())
+
+      let transObj = {id: null, entity: this.constructor.name, tasks: []}
+      serverApi.load(this.constructor.name, id, transObj).
+        then(() => {
+          this.dayTasks.forEach(dayTask => {
+            // biktop
+            let isDone = transObj.tasks.findIndex((task) => {
+              return ((task.taskId === dayTask.taskModel.id) && (task.isDone))}) >= 0
+            dayTask._isDone = isDone
+          })
+        this.loaded()
+      })
     })
   }
 }

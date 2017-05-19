@@ -8,10 +8,10 @@ export class DayTaskViewModel {
   }
 
   getIsDone() {
-      return this._model.isDone
+      return this._model.getIsDone()
   }
 
   setIsDone(isDone) {
-      this._model.isDone = isDone
+      this._model.setIsDone(isDone)
   }
 }

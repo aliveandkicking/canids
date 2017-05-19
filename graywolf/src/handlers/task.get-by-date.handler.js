@@ -8,7 +8,7 @@ module.exports = function (req, res){
     let result = []
     tasks.forEach((task) => {
       if (task.repeatRules.containsDate(date)) {
-        result.push(task.toJson())
+        result.push(task.saveToTransportObject())
       }
     });
     res.send(result)

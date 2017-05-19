@@ -10,7 +10,7 @@ let retrieveTasks = function(callback) {
         if ((rows) && (Array.isArray(rows))) {
             rows.forEach((row) => {
                 let task = new TaskModel()
-                transportObjectProcessor.loadFromTempObject(row.data, task)
+                transportObjectProcessor.loadFromTempObject(task, row.data)
                 tasks.push(task)
             })
         } else {

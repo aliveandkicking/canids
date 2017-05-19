@@ -25,7 +25,7 @@ class TransportObjectProcessor {
                 if (object[key] instanceof Date) {
                     object[key] = dateUtils.fromString(tempObject[key])
                 } else if (object[key] instanceof Object) {
-                        this.loadFromTempObject(tempObject[key], object[key])
+                        this.loadFromTempObject(object[key], tempObject[key])
                 } else {
                     object[key] = tempObject[key]
                 }
@@ -43,11 +43,15 @@ class TransportObjectProcessor {
             result = {}
             for (let key in value) {
                 if (value.hasOwnProperty(key)) {
-                    result[key] = this.getJsonValue(value[key])
+                   if (!(value[key] instanceof Function)) { //biktop
+                        result[key] = this.getJsonValue(value[key])
+                   }
                 }
             }
-            if (!result.entity) {
-                result.entity = value.constructor.name
+            if ('id' in result) {
+                if (!result.entity) {
+                    result.entity = value.constructor.name
+                }
             }
         }
     return result

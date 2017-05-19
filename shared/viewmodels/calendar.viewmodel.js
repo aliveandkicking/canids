@@ -1,9 +1,9 @@
 import { dateUtils } from '../utils/dateutils';   
 import { CalendarModel } from '../models/calendar.model';
 
-export class CalendarViewModel{  
-  constructor() {
-    this._model = new CalendarModel();    
+export class CalendarViewModel {
+  constructor () {
+    this._model = new CalendarModel()
     this._needRecalcDates = true
     this._currentDates = null
     this._today = new Date()
@@ -13,34 +13,34 @@ export class CalendarViewModel{
     this._numberOfWeeksOnPage = 6
     this._numberOfMonthColumnsOnPage = 4
 
-    this._onCheckIfDateIsSelected = null   
-    this._onDateActivated = null    
+    this._onCheckIfDateIsSelected = null
+    this._onDateActivated = null
   } 
 
-  getCurrentYear() {
-    return this._currentYear;
+  getCurrentYear () {
+    return this._currentYear
   }
 
-  getCurrentDates() {
+  getCurrentDates () {
     if (this._needRecalcDates) {
-      this._currentDates = this._model.getDates(this._currentYear, this._currentMonth, this._numberOfWeeksOnPage)            
+      this._currentDates = this._model.getDates(this._currentYear, this._currentMonth, this._numberOfWeeksOnPage)
     }    
-    return this._currentDates    
+    return this._currentDates
   }
 
-  setMonthMode(isMonthMode){
+  setMonthMode (isMonthMode){
     this._isMonthMode = isMonthMode
   }
 
-  isMonthMode() {
-    return this._isMonthMode;
+  isMonthMode () {
+    return this._isMonthMode
   }
 
-  getCurrentMonth() {
+  getCurrentMonth () {
     return this._currentMonth
   }
 
-  setCurrentMonth(month) {
+  setCurrentMonth (month) {
     if ((!month) && (month !== 0)) {
       return
     }
@@ -68,7 +68,7 @@ export class CalendarViewModel{
       row.push(month)
       if ((i > 0) && ((i + 1) % this._numberOfMonthColumnsOnPage === 0)) {
         result.push(row)
-        row = []        
+        row = []
       }
     }
     if (row.length > 0) {
@@ -78,9 +78,11 @@ export class CalendarViewModel{
   }  
 
   getWeekDays() {
-    let result = [] 
-    this._model.dayNames.forEach((name, index) => result.push({index, name}))
-    return result
+    return ( //biktop finished here
+      (this._model._mondayBased
+        ? dateUtils.DAYS_OF_WEEK_MONDAY_BASED
+        : dateUtils.DAYS_OF_WEEK).map(el => dateUtils.DAY_NAMES[el])
+    )
   }
 
   next() {

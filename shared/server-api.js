@@ -3,54 +3,51 @@ let transportObjectProcessor = require('../shared/transport-object-processor').t
 let dateUtils = require('../shared/utils/dateutils').dateUtils // biktop remove
 
 class ServerApi {
-    post (route, object, callback) {
-        let anHttpRequest = new XMLHttpRequest()
-
-        anHttpRequest.onreadystatechange =
-            function () {
-                if (anHttpRequest.readyState == 4 && anHttpRequest.status == 200) {
-                    console.dir(JSON.parse(anHttpRequest.responseText))
-                    if (callback) {
-                        callback(anHttpRequest.responseText);
+    post (route, object) {
+        const result = new Promise((resolve, reject) => {
+            let httpRequest = new XMLHttpRequest()
+            httpRequest.onreadystatechange =
+                function () {
+                    if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+                        resolve(httpRequest.responseText)
                     }
                 }
-            }
-        anHttpRequest.open("POST", constants.SERVER_URL + constants.SEPARATOR + route, true) // biktop proper path building
-        anHttpRequest.setRequestHeader('Access-Control-Allow-Origin', '*')
-        anHttpRequest.setRequestHeader('Content-type', 'application/json')
-        anHttpRequest.send(this._buildJsonString(object))
+            httpRequest.open("POST", constants.SERVER_URL + constants.SEPARATOR + route, true) // biktop proper path building
+            httpRequest.setRequestHeader('Access-Control-Allow-Origin', '*')
+            httpRequest.setRequestHeader('Content-type', 'application/json')
+            httpRequest.send(transportObjectProcessor.buildJsonString(object))
+        })
+        result.catch((err) => {console.error(err)})
+        return result
     }
 
-    save (object, callback) {
-        this.post(constants.SAVE, object, callback)
+    save (object) {
+        return this.post(constants.SAVE, object)
     }
 
-    load (args, callback, object) {
-        this.post(constants.LOAD, args, function(responceText) {
-            this._loadFromTransportObject(object, transportObjectProcessor.getTransportObject(responceText))
-            transportObjectProcessor.loadFromJsonString(responceText, object)
-            if (callback) {
-                callback(anHttpRequest.responseText);
-            }
-        } )
+    load (entity, id, object) {
+        let result = this.post(constants.LOAD, this.getLoadRequestObject(entity, id)).
+                then(responseText => {
+                    let transObjs = JSON.parse(responseText)
+                    if ((object) && (transObjs.length > 0)) {
+                        transportObjectProcessor.loadFromTempObject(object, transObjs[0].data)
+                    }
+                    return(transObjs)
+                }
+            )
+        return result
     }
 
-    getTasksByDate (date, callback) {
-        this.post(constants.TASK + constants.SEPARATOR + constants.GETBYDATE, {date: dateUtils.toString(date)}, callback)
+    getTasksByDate (date) {
+        const path = constants.TASK + constants.SEPARATOR + constants.GETBYDATE
+        return this.post(path, {date: dateUtils.toString(date)}).
+            then(responseText => {
+                return JSON.parse(responseText)
+            })
     }
 
-    _buildJsonString (object) {
-        if (object.toJson) {
-            return object.toJson()
-        }
-        return transportObjectProcessor.buildJsonString(object)
-    }
-
-    _loadFromTransportObject (object, transportObject) {
-        if (object.loadFromTransportObject) {
-            object.loadFromTransportObject(transportObject)
-        }
-        transportObjectProcessor.loadFromTempObject(object, transportObject)
+    getLoadRequestObject (entity, ids) {
+        return {entity, ids: Array.isArray(ids) ? ids : [ids]}
     }
 }
 

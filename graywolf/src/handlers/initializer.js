@@ -7,7 +7,6 @@ const routes = [
   router(constants.TASK, [
     post(constants.GETBYDATE, require('./task.get-by-date.handler'))
   ])
-
 ]
 
 function item (type = '', route = '', handlers) {
@@ -26,9 +25,9 @@ function post (route, handler) {
   return item(constants.POST, route, [handler])
 }
 
-function get (route, handler) {
-  return item(constants.GET, route, [handler])
-}
+// function get (route, handler) {
+//   return item(constants.GET, route, [handler])
+// }
 
 function run (server) {
   const api = []

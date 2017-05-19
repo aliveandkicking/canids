@@ -1,4 +1,5 @@
 // Place your settings in this file to overwrite default and user settings.
 {
-  "pgsql.connection": "postgres://postgres:123456@localhost:5432/sandbox"
+  "pgsql.connection": "postgres://postgres:123456@localhost:5432/sandbox",
+  "standard.enable": true
 }

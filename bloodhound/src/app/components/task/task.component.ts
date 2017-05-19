@@ -27,7 +27,7 @@ export class TaskComponent implements OnInit {
 
   delete() {
     this.onDelete.emit(this.id)
-    console.log('delete', this.name);    
+    console.log('delete', this.name);
   }
 
 }

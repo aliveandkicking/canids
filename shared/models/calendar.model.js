@@ -1,21 +1,23 @@
-import { dateUtils } from '../utils/dateutils';   
-
-const STATITC_DAY_NAMES = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
-const SUNDAY = 'Su'
-
+import { dateUtils } from '../utils/dateutils';
 
 export class CalendarModel {
   constructor() {
       this._mondayBased = true
-      this.dayNames = []
       this.setMondayBased(true)
-  } 
+  }
+
+  getDayNames () {
+    // return this._mondayBased ? dateUtils.DAYS_OF_WEEK_MONDAY_BASED.map((el))
+
+
+
+    // this._model.dayNames.forEach((name, index) => result.push({index, name}))
+    // return result
+
+  }
 
   setMondayBased(mondayBased){
       this._mondayBased = mondayBased
-      this.dayNames = this._mondayBased ? 
-       [].concat(STATITC_DAY_NAMES, SUNDAY) :
-       [].concat(SUNDAY, STATITC_DAY_NAMES)
   }
 
   getWeekDayIndex (weekDay) {
@@ -24,7 +26,7 @@ export class CalendarModel {
 
   getLastWeekStart (year, month) {
     let monthStart = new Date(year, month, 0)
-    let dayOfWeek = this._mondayBased ? dateUtils.mondayBasedDayOfWeek(monthStart) : monthStart.getDay()    
+    let dayOfWeek = this._mondayBased ? dateUtils.mondayBasedDayOfWeek(monthStart) : monthStart.getDay()
     return dateUtils.decDay(monthStart, dayOfWeek)
   }
 
