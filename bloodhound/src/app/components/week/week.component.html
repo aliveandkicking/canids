@@ -1,8 +1,5 @@
-<table>
-  <tr>
-    <td class="day-container"
-      *ngFor="let date of getDates()">
-      <pl-day [viewModel]=getDayViewModel(date)></pl-day>
-    </td>
-  </tr>
-</table>
+<div class="root">
+  <span class="day-container" *ngFor="let date of getDates()">
+      <pl-day [viewModel]="getDayViewModel(date)"></pl-day>
+  </span>
+</div>

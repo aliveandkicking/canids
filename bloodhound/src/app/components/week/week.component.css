@@ -1,6 +1,14 @@
 .day-container{
-    width: 500px;
-    height: 150px;
-    border: 1px solid grey;
-    margin: auto;
+    border: 1px solid green;
+    flex-grow: 1;
+    /*display: flex;*/
+}
+
+.root {
+    min-width: 300px;
+    /*background-color: deepskyblue;*/
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    min-height: 200px;
 }
