@@ -42,4 +42,8 @@ export class WeekComponent implements OnInit {
     this.viewModel.today();
   }
 
+  getCaption(): string {
+    return this.viewModel.getCaption();
+  }
+
 }

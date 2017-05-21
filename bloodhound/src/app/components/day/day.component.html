@@ -1,13 +1,16 @@
 <div class="root">
-
   <div class="header">
-    {{getDate() | date:'yyyy-MM-dd'}}
+    {{getDate() | date:'yyyy MMMM dd'}}
   </div>
 
   <div class="body">
       <div *ngFor="let taskViewModel of getTasksViewModels()">
         <app-day-task [viewModel]="taskViewModel"></app-day-task>
       </div>
+  </div>
+
+  <div class="bottom-panel">
+    summary here
   </div>
 </div>
 

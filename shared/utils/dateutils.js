@@ -77,12 +77,12 @@ class DateUtils {
       this.MILISECONDS_IN_DAY))
   }
 
-  encodeDate (date) {
+  decodeDate (date) {
     return [date.getFullYear(), date.getMonth(), date.getDate()]
   }
 
   clearTime (date) {
-    return new Date(...this.encodeDate(date))
+    return new Date(...this.decodeDate(date))
   }
 
   getElementAsString (element) {

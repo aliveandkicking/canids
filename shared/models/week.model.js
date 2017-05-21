@@ -19,6 +19,10 @@ export class WeekModel extends BaseModel {
     return this._date
   }
 
+  getEndDate () {
+    return dateUtils.incDay(this.getDate(), dateUtils.DAYS_IN_WEEK)
+  }
+
   next () {
     this.setDate(dateUtils.incDay(this.getDate(), dateUtils.DAYS_IN_WEEK))
   }

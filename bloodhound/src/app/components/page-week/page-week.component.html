@@ -1,9 +1,15 @@
 <div class="root">
   <div class="header">
-    <button class="new-task-button" (click)="goToNewTaskPage()">
-      +
-    </button>
-
+    <div class="new-task-button-container">
+      <button class="new-task-button" (click)="goToNewTaskPage()">
+        +
+      </button>
+    </div>
+    <div class="cation-container">
+      <p class="caption">
+        {{appweek.getCaption()}}
+      </p>
+    </div>
     <div class="navigation-buttons-containter">
       <button class="today-button" (click)="appweek.today()">
         Today

@@ -1,8 +1,35 @@
 .root {
-
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height: 25px;
 }
 
-.check-mark {
-    display: inline;
-    border: 2px solid #555;
+.task-name-container {
+    display: flex;
+    align-items: stretch;
+    flex-grow: 1;
+    width: 0px;
+}
+
+.task-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex-grow: 1;
+}
+
+.check-box {
+    border: 2px solid rgba(220, 220, 255, 0.4);
+    border-radius: 4px;
+    width: 15px;
+    height: 15px;
+    margin-left: 5px;
+}
+
+.checked-image {
+    width: 100%;
+    height: 100%;
+    top: -5%;
 }

@@ -28,7 +28,7 @@ interface DateUtils {
   mondayBasedDayOfWeekIdx (index: number): number,
   mondayBasedDayOfWeek (date: Date): number,
   getDaysBetween (startDate: Date, endDate: Date): number,
-  encodeDate (date: Date): number[],
+  decodeDate (date: Date): number[],
   clearTime (date: Date): Date,
   getElementAsString(element: number): string,
   toString(date: Date): string,
