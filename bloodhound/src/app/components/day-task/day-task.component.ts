@@ -24,5 +24,4 @@ export class DayTaskComponent implements OnInit {
   changeState(): void {
     this.viewModel.setIsDone(!this.viewModel.getIsDone());
   }
-
 }

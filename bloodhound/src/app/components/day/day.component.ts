@@ -34,3 +34,4 @@ export class DayComponent implements OnInit, OnDestroy {
   }
 
 }
+

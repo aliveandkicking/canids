@@ -36,3 +36,4 @@ export class PageWeekComponent implements OnInit {
     console.dir(el);
   }
 }
+

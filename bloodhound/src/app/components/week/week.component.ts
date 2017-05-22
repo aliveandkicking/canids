@@ -47,3 +47,4 @@ export class WeekComponent implements OnInit {
   }
 
 }
+
