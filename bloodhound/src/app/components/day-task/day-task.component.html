@@ -1,6 +1,6 @@
 <div class="root" (dblclick)="changeState()">
   <span class="task-name-container">
-    <p class="task-name">
+    <p [ngClass]="!isDone() ? 'task-name' : 'task-name, task-name-done'">
       {{getTaskName()}}
     </p>
   </span>

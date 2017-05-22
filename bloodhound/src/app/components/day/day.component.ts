@@ -33,5 +33,19 @@ export class DayComponent implements OnInit, OnDestroy {
     return this.viewModel.getDayTasksViewModels();
   }
 
+  getSummaryText() : string {
+    let done = 0;
+    this.getTasksViewModels().forEach(viewModel => {
+      if (viewModel.getIsDone()) {
+        done++;
+      }
+    });
+    if (done === 0) {
+      return `total ${this.getTasksViewModels().length} task(s)`
+    } else {
+      return `${done} done, ${this.getTasksViewModels().length - done} to go`
+    }
+  }
+
 }
 

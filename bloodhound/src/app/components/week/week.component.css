@@ -1,5 +1,5 @@
 .day-container{
-    border: 1px solid green;
+    /*border: 1px solid green;*/
     flex-grow: 1;
     flex-basis: 1px;
     width: 0px;

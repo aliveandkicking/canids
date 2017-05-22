@@ -1,6 +1,6 @@
 <div class="root">
   <div class="header">
-    {{getDate() | date:'yyyy MMMM dd'}}
+    {{getDate() | date:'EEE dd'}}
   </div>
 
   <div class="body">
@@ -10,6 +10,6 @@
   </div>
 
   <div class="bottom-panel">
-    summary here
+    {{getSummaryText()}}
   </div>
 </div>
