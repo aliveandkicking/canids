@@ -1,0 +1,22 @@
+<div class="root">
+  <span class="form-container">
+    <div>
+      <input
+        type="text"
+        #taskName
+        [value]="getTaskName()"
+        placeholder="Task Name"
+        (input)="setTaskName(taskName.value)">
+    </div>
+
+    <div>
+      <repeat-rules [viewModel]="getRepeatRulesViewModel()">
+        loading ...
+      </repeat-rules>
+    </div>
+  </span>
+
+  <span class="calendar-container">
+    <calendar></calendar>
+  </span>
+</div>

@@ -7,15 +7,15 @@ import { RepeatRulesViewModel } from '../../../../../shared/viewmodels/repeat-ru
 
 
 @Component({
-  selector: 'create-task',
-  templateUrl: './create-task.component.html',
-  styleUrls: ['./create-task.component.css'],
+  selector: 'edit-task',
+  templateUrl: './edit-task.component.html',
+  styleUrls: ['./edit-task.component.css'],
     providers: [{
       provide: CreateViewModelToken,
       useValue: createViewModel(TaskCreateViewModel)
   }]
 })
-export class CreateTaskComponent implements OnInit {
+export class EditTaskComponent implements OnInit {
 
   constructor(
     @Inject(CreateViewModelToken) private viewModel: TaskCreateViewModel,

@@ -1,50 +1,52 @@
-{{getCurrentYear()}}
+<div class="root">
+  {{getCurrentYear()}}
 
-<div> 
-  <button (click)="onPrev()">  
-    prev
-  </button>
+  <div>
+    <button (click)="onPrev()">
+      prev
+    </button>
 
-  <button (click)="showMonths()">
-    {{getMonthName()}}
-  </button>
+    <button (click)="showMonths()">
+      {{getMonthName()}}
+    </button>
 
-  <button (click)="onNext()">
-    next
-  </button>
+    <button (click)="onNext()">
+      next
+    </button>
+  </div>
+
+
+  <table *ngIf="!isMonthMode()">
+
+    <tr>
+      <td *ngFor="let weekDay of getWeekDays()"
+        (click)="onDayOfWeekClick(weekDay)"
+        [ngClass]="getWeekDayCellClass(weekDay)"
+      >
+        {{getDayName(weekDay)}}
+      </td>
+    </tr>
+
+    <tr *ngFor="let week of getCurrentDates()">
+      <td *ngFor="let day of week"
+        (click)="onDayClick(day)"
+        [ngClass]="getDayCellClass(day)"
+      >
+        {{day.getDate()}}
+      </td>
+    </tr>
+
+  </table>
+
+  <table *ngIf="isMonthMode()">
+
+    <tr *ngFor="let row of getMonths()">
+      <td *ngFor="let month of row" (click)="onMonthClick(month.index)">
+        {{month.name}}
+      </td>
+    </tr>
+
+  </table>
 </div>
-
-
-<table *ngIf="!isMonthMode()">
-
-  <tr>
-    <td *ngFor="let weekDay of getWeekDays()"
-      (click)="onDayOfWeekClick(weekDay)"
-      [ngClass]="getWeekDayCellClass(weekDay)"
-    >
-      {{getDayName(weekDay)}}
-    </td>
-  </tr>
-
-  <tr *ngFor="let week of getCurrentDates()">
-    <td *ngFor="let day of week"
-      (click)="onDayClick(day)"
-      [ngClass]="getDayCellClass(day)"
-    >
-      {{day.getDate()}}
-    </td>
-  </tr>
-
-</table>   
-
-<table *ngIf="isMonthMode()">
-
-  <tr *ngFor="let row of getMonths()">
-    <td *ngFor="let month of row" (click)="onMonthClick(month.index)">
-      {{month.name}}
-    </td>
-  </tr>
-
-</table>   
 
 

@@ -10,7 +10,7 @@ import { DateHelperService } from './services/date-helper.service';
 import { AppComponent } from './app.component';
 import {
   CalendarComponent,
-  CreateTaskComponent,
+  EditTaskComponent,
   RepeatRulesComponent,
   DayComponent
 } from './components';
@@ -24,7 +24,7 @@ import { EditTaskService } from './services/edit-task.service';
   declarations: [
     AppComponent,
     CalendarComponent,
-    CreateTaskComponent,
+    EditTaskComponent,
     RepeatRulesComponent,
     DayComponent,
     WeekComponent,

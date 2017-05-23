@@ -1,3 +1,14 @@
-<div>
-  <create-task>Loading...</create-task>
+<div class="root">
+  <div class="header">
+    <button class="header-button" (click)="editTask.save()">
+      Save
+    </button>
+    <button class="header-button" (click)="editTask.save()">
+      Cancel
+    </button>
+  </div>
+  <div class="content">
+    <!--<app-week #appweek></app-week>-->
+    <edit-task #editTask></edit-task>
+  </div>
 </div>
