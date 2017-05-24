@@ -1,0 +1,20 @@
+.root {
+    height: 550px;
+    width: 450px;
+}
+
+.header {
+    align-items: stretch;
+    background-color: #eee;
+    border-bottom: 1px solid gray;
+    border-radius: 5px 5px 0px 0px;
+
+    display: flex;
+    height: 40px;
+    justify-content: space-between;
+}
+
+.header-button {
+    margin: 5px;
+    width: 75px;
+}

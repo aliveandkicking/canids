@@ -9,23 +9,18 @@ import { DateHelperService } from './services/date-helper.service';
 
 import { AppComponent } from './app.component';
 import {
-  CalendarComponent,
-  EditTaskComponent,
-  RepeatRulesComponent,
   DayComponent
 } from './components';
 
 import { WeekComponent } from './components/week/week.component';
 import { DayTaskComponent } from './components/day-task/day-task.component';
 
-import { EditTaskService } from './services/edit-task.service';
+import { EditTaskModule } from './edit-task/edit-task.module';
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    CalendarComponent,
-    EditTaskComponent,
-    RepeatRulesComponent,
     DayComponent,
     WeekComponent,
     DayTaskComponent,
@@ -36,11 +31,11 @@ import { EditTaskService } from './services/edit-task.service';
     FormsModule,
     HttpModule,
     RouterModule,
-    AppRoutingModule
+    AppRoutingModule,
+    EditTaskModule,
   ],
   providers: [
     DateHelperService,
-    EditTaskService
   ],
   bootstrap: [AppComponent]
 })

@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy, Inject, Input, NgZone } from '@angular/core';
-import { DayService } from '../../services/day.service';
 import { DayViewModel } from '../../../../../shared/viewmodels/day.viewmodel';
 import { DayTaskViewModel } from '../../../../../shared/viewmodels/day-task.viewmodel';
 

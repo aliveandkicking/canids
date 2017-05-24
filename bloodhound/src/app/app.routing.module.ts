@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { PageEditTaskComponent, PageWeekComponent } from './components';
+import { PageWeekComponent } from './components';
 
 const appRoutes: Routes = [
   {
@@ -10,16 +10,12 @@ const appRoutes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'edit',
-    component: PageEditTaskComponent
-  },
-  {
     path: '**',
     component: PageWeekComponent
   }
 ];
 
-export const appRouterComponents = [PageEditTaskComponent, PageWeekComponent];
+export const appRouterComponents = [PageWeekComponent];
 
 @NgModule({
   imports: [

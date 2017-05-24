@@ -1,0 +1,58 @@
+.root {
+  padding: 5px;
+}
+
+.mode-buttons-container {
+  display: flex;
+  margin-bottom: 5px;
+}
+
+.mode-button, .selcted-mode-button{
+  flex-grow: 1;
+  height: 25px;
+}
+
+.selcted-mode-button{
+  background-color: #9A9
+}
+
+
+.calendar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.repeat-options-container {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.input-container {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  margin: 5px 90px 5px 10px;
+}
+
+.input-label {
+  text-align: right;
+  width: 100px;
+  padding-bottom: 4px;
+}
+
+.input-control {
+  flex-grow: 1;
+  margin: 5px 90px 5px 30px;
+}
+
+#end-date-control {
+  flex-grow: 1;
+  /*margin: 5px 10px 5px 10px;*/
+}
+
+#never-end-checkbox-label {
+  padding-bottom: 4px;
+
+}

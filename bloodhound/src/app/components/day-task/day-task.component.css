@@ -13,7 +13,7 @@
     width: 0px;
 }
 
-.task-name {
+.task-name, .task-name-done {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

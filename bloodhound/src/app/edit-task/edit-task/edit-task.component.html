@@ -1,0 +1,17 @@
+<div class="root">
+  <div class="task-name-container">
+      <input
+        class="task-name-input"
+        type="text"
+        #taskName
+        [value]="getTaskName()"
+        placeholder="Task Name"
+        (input)="setTaskName(taskName.value)">
+  </div>
+
+  <div class="repeat-rules-container">
+    <repeat-rules [viewModel]="getRepeatRulesViewModel()">
+      loading ...
+    </repeat-rules>
+  </div>
+</div>

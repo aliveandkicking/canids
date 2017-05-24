@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { EditTaskService } from '../../services/edit-task.service';
-
+import { EditTaskService } from '../../edit-task/edit-task.service';
 
 @Component({
   selector: 'app-page-week',
   templateUrl: './page-week.component.html',
-  styleUrls: ['./page-week.component.css']
+  styleUrls: ['./page-week.component.css'],
 })
 export class PageWeekComponent implements OnInit {
 

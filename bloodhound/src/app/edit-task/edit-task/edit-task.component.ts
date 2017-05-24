@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { EditTaskService } from '../../services/edit-task.service';
 import { CreateViewModelToken, createViewModel } from '../../services/create-viewmodel.service';
 import { TaskCreateViewModel } from '../../../../../shared/viewmodels/task-create.viewmodel';
 import { RepeatRulesViewModel } from '../../../../../shared/viewmodels/repeat-rules.viewmodel';
@@ -19,7 +18,6 @@ export class EditTaskComponent implements OnInit {
 
   constructor(
     @Inject(CreateViewModelToken) private viewModel: TaskCreateViewModel,
-    private editTaskService: EditTaskService
   ) { }
 
   ngOnInit() { }
@@ -38,10 +36,5 @@ export class EditTaskComponent implements OnInit {
 
   save() {
     this.viewModel.save();
-    this.editTaskService.finishEditing()
-  }
-
-  cancel() {
-    this.editTaskService.finishEditing()
   }
 }

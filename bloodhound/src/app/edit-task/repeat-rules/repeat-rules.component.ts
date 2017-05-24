@@ -33,13 +33,11 @@ export class RepeatRulesComponent implements OnInit {
   onModeSelected(modeId: number): void {
     if (this.viewModel.getMode() !== modeId) {
       this.viewModel.setMode(modeId)
-    }    
+    }
   }
 
-  getModeButtonClass(modeId): string[] {
-    return (this.viewModel.getMode() === modeId)
-      ? ['selcted-mode-button']
-      : []
+  getModeIsSelected(modeId): boolean {
+    return this.viewModel.getMode() === modeId;
   }
 
   getDayOfWeekButtonClass(dayOfWeek: number): string[] {
