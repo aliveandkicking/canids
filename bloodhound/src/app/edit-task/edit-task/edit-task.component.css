@@ -1,11 +1,19 @@
 .root {
   display: flex;
+  align-items: stretch;
+  height: 100%;
+}
+
+.content-container {
+  padding: 15px;
+  flex: 1;
+  display: flex;
+  /*width: 0px; */
   flex-direction: column;
 }
 
 .task-name-container {
   height: 40px;
-  /*border-bottom: 1px solid #eee;*/
   display: flex;
 }
 
@@ -15,4 +23,8 @@
   font-size: 120%;
   font-weight: bold;
   padding-left: 5px;
+}
+
+.repeat-rules-container {
+  flex: 1;
 }

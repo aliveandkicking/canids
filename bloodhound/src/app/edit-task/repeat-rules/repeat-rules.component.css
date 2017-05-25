@@ -1,26 +1,55 @@
 .root {
   padding: 5px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.body-section {
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 10px;
 }
 
 .mode-buttons-container {
   display: flex;
-  margin-bottom: 5px;
+  margin-top: 5px;
+  margin-bottom: 20px;
 }
 
-.mode-button, .selcted-mode-button{
+.mode-button, .selcted-mode-button {
   flex-grow: 1;
   height: 25px;
+  background-color: white;
+  border: transparent;
+  border-bottom: 1px solid #ddd;
 }
 
-.selcted-mode-button{
-  background-color: #9A9
+.mode-button:focus {
+  outline:0;
 }
 
+.selcted-mode-button:focus {
+  outline:0;
+}
 
-.calendar-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.mode-button {
+  color: #999;
+}
+
+.mode-button:hover {
+  color: #333;
+}
+
+.repeat-mode-container-gap {
+  width: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.selcted-mode-button {
+  border: 1px solid #ddd;
+  border-bottom: transparent;
+  font-weight: bold;
 }
 
 .repeat-options-container {
@@ -33,26 +62,84 @@
   flex-grow: 1;
   display: flex;
   align-items: center;
-  margin: 5px 90px 5px 10px;
+  margin: 0px 5px 10px 5px;
+}
+
+.input-label, .never-end-checkbox-label {
+  margin-bottom: 3px;
+  /*font-weight: bold;*/
 }
 
 .input-label {
   text-align: right;
   width: 100px;
-  padding-bottom: 4px;
+  min-width: 100px;
+  margin-left: 35px;
 }
 
-.input-control {
-  flex-grow: 1;
-  margin: 5px 90px 5px 30px;
+.input-control, .custom-options-container {
+  flex: 1;
+  height: 20px;
+  padding: 0px;
+  margin: 0px 100px 0px 10px;
 }
 
 #end-date-control {
-  flex-grow: 1;
-  /*margin: 5px 10px 5px 10px;*/
+  flex: 1;
+  width: 20px;
+  margin: 0px 0px 0px 10px;
 }
 
-#never-end-checkbox-label {
-  padding-bottom: 4px;
+.never-end-checkbox-label {
+  width: 80px;
+}
 
+.custom-options-container {
+  display: flex;
+  align-items: stretch;
+}
+
+.custom-option, .selected-custom-option {
+  flex: 1;
+  padding: 0px;
+  border-width: 0px;
+  background-color: transparent;
+  cursor: pointer;
+  user-select: none;
+  text-align: center;
+  padding-top: 1px;
+}
+
+.custom-option {
+  color: #ccc;
+}
+
+.custom-option:hover {
+  color: #777;
+  /*border-bottom: 2px solid #eee;*/
+}
+
+.selected-custom-option {
+  font-weight: bold;
+  border-bottom: 2px solid #ccc;
+}
+
+#month-options-container {
+  margin-left: 55px;
+  /*//biktop*/
+  /*margin-right: */
+  justify-content: center;
+}
+
+.month-custom-option {
+  flex: 0;
+  white-space: nowrap;
+  margin-right: 10px;
+}
+
+.calendar-container {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
 }

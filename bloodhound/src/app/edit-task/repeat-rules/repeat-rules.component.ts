@@ -36,14 +36,12 @@ export class RepeatRulesComponent implements OnInit {
     }
   }
 
-  getModeIsSelected(modeId): boolean {
+  modeIsSelected(modeId): boolean {
     return this.viewModel.getMode() === modeId;
   }
 
-  getDayOfWeekButtonClass(dayOfWeek: number): string[] {
-    return (this.viewModel.getWeekDaysToRepeat().includes(dayOfWeek))
-      ? ['selcted-mode-button']
-      : []
+  weekDayIsSelected(weekDay: number): boolean {
+    return this.viewModel.getWeekDaysToRepeat().includes(weekDay);
   }
 
   onCheckIfDateIsSelected(date: Date): boolean {
@@ -70,6 +68,10 @@ export class RepeatRulesComponent implements OnInit {
 
   onDayOfWeekClick(dayOfWeek: number): void {
     this.viewModel.changeWeekDayToRepeat(dayOfWeek)
+  }
+
+  getUseDayOfTheLastWeek(): boolean {
+    return this.viewModel.getUseDayOfTheLastWeek();
   }
 
   setUseDayOfTheLastWeek(useDayOfTheLastWeek: boolean): void {
