@@ -130,4 +130,12 @@ export class CalendarViewModel {
   setOnDateActivated (event) {
     this._onDateActivated = event
   }
+
+  goToDate (date) {
+    if (date) {
+      this._currentMonth = date.getMonth()
+      this._currentYear = date.getFullYear()
+      this._needRecalcDates = true
+    }
+  }
 }

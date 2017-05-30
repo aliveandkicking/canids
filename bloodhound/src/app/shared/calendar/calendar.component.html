@@ -1,52 +1,67 @@
 <div class="root">
-  {{getCurrentYear()}}
 
-  <div>
-    <button (click)="onPrev()">
-      prev
-    </button>
-
-    <button (click)="showMonths()">
-      {{getMonthName()}}
-    </button>
-
-    <button (click)="onNext()">
-      next
-    </button>
+  <div class="header">
+    <span class="navigation-button" (click)="onPrev()">
+      <img src="../../../assets/prev.png" class="naviagation-button-image">
+    </span>
+    <span class="header-caption-container">
+      <span
+        class="displayed-month-header-caption"
+        *ngIf="!isMonthMode()"
+        (click)="showMonths()">
+        {{getMonthName()}}
+      </span>
+      <span
+        class="displayed-year-header-caption"
+        (click)="showMonths()">
+        {{getCurrentYear()}}
+      </span>
+    </span>
+    <span class="navigation-button" (click)="onNext()">
+      <img src="../../../assets/next.png" class="naviagation-button-image">
+    </span>
   </div>
 
+  <div class="content">
 
-  <table *ngIf="!isMonthMode()">
+    <div class="dates-container" *ngIf="!isMonthMode()">
+      <div class="calendar-line">
+        <span
+          class="day-name-cell"
+          *ngFor="let weekDay of getWeekDays()"
+          (click)="onDayOfWeekClick(weekDay)">
+            {{getDayName(weekDay)}}
+        </span>
+      </div>
+      <div class="calendar-line" *ngFor="let week of getCurrentDates()">
+        <span
+          *ngFor="let day of week"
+          [ngClass]="dateIsSelected(day) ? 'day-cell-selected' : 'day-cell'"
+          (click)="onDayClick(day)">
+            <span
+              [ngClass]="isCurrentMonth(day) ? '' : 'date-caption'">
+              {{day.getDate()}}
+            </span>
+        </span>
+      </div>
+    </div>
 
-    <tr>
-      <td *ngFor="let weekDay of getWeekDays()"
-        (click)="onDayOfWeekClick(weekDay)"
-        [ngClass]="getWeekDayCellClass(weekDay)"
-      >
-        {{getDayName(weekDay)}}
-      </td>
-    </tr>
+    <div class="months-container" *ngIf="isMonthMode()">
+      <div class="month-cell-line" *ngFor="let row of getMonths()">
+        <span
+          class="month-cell"
+          *ngFor="let month of row"
+          (click)="onMonthClick(month.index)">
+           {{month.name}}
+        </span>
+      </div>
+    </div>
 
-    <tr *ngFor="let week of getCurrentDates()">
-      <td *ngFor="let day of week"
-        (click)="onDayClick(day)"
-        [ngClass]="getDayCellClass(day)"
-      >
-        {{day.getDate()}}
-      </td>
-    </tr>
+  </div>
 
-  </table>
-
-  <table *ngIf="isMonthMode()">
-
-    <tr *ngFor="let row of getMonths()">
-      <td *ngFor="let month of row" (click)="onMonthClick(month.index)">
-        {{month.name}}
-      </td>
-    </tr>
-
-  </table>
+  <div class="footer">
+    <span class="today-caption" (click)="goToToday()">
+      {{'Today: ' + (getTodaysDate()|date:'EEEE, MMM d, y')}}
+    </span>
+  </div>
 </div>
-
-

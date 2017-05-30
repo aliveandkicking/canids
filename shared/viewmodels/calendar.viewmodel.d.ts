@@ -17,9 +17,10 @@ export declare class CalendarViewModel {
   dateActivated(date: Date): void;
   monthActivated(month: number): void;
   dayOfWeekActivated(dayOfWeek: number): void;
-  
+
   next(): void;
   prev(): void;
+  goToDate(date: Date): void;
 
   setOnCheckIfDateIsSelected(event: (date: Date) => boolean): void;
   setOnDateActivated(event: (date: Date) => void): void;

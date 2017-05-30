@@ -1,22 +1,110 @@
-.root {
-
+:host {
+    flex: 1;
+    display: flex;
+    align-items: stretch;
 }
 
-.calendar-cell{
-    background-color: white;    
-    cursor: default;
-    width: 30px;
+.root {
+    margin: 5px 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.header {
     height: 30px;
-    /*font-family: Verdana, Geneva, Tahoma, sans-serif;*/
-    font-weight: bold;
-    text-align: center;
+    display: flex;
+    align-items: center;
+}
+
+.navigation-button {
+    cursor: pointer;
     user-select: none;
 }
 
-.calendar-cell-selected {
-    background-color: blanchedalmond;
+.naviagation-button-image {
+    width: 20px;
+    height: 20px;
+    margin: 0px 13px;
 }
 
-.calendar-cell:hover, .calendar-cell-selected:hover{
-    background-color: cornflowerblue;        
+.header-caption-container {
+    display: flex;
+    justify-content: center;
+    flex: 1;
+    font-size: 110%;
+    font-weight: 600;
+}
+
+.displayed-month-header-caption {
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.displayed-year-header-caption {
+    cursor: pointer;
+}
+
+.content {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: stretch;
+}
+
+.dates-container, .months-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-top: 1px solid #eee;
+    border-right: 1px solid #eee;
+}
+
+.calendar-line, .month-cell-line {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.day-cell, .day-name-cell, .day-cell-selected, .month-cell {
+    cursor: pointer;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    border-left: 1px solid #eee;
+}
+
+.day-cell-selected {
+    background-color: #efefff;
+}
+
+.day-cell:hover, .day-cell-selected:hover, .month-cell:hover {
+    background-color: #eee;
+    font-weight: 650;
+}
+
+.date-caption, .current-month-date-caption {
+    user-select: none;
+}
+
+.date-caption {
+    color: #ddd;
+}
+
+.footer {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.today-caption {
+    cursor: pointer;
+}
+
+.today-caption:hover {
+    color: #777;
 }

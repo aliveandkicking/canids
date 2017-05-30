@@ -1,9 +1,9 @@
 .root {
-  padding: 5px;
-  height: 100%;
+  align-items: stretch;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+  height: 100%;
+  padding: 5px;
 }
 
 .body-section {
@@ -11,18 +11,25 @@
   margin-bottom: 10px;
 }
 
+.inputs-container {
+  align-items: stretch;
+  display: flex;
+  flex-direction: column;
+  height: 132px;
+  justify-content: center;
+}
+
 .mode-buttons-container {
   display: flex;
   margin-top: 5px;
-  margin-bottom: 20px;
 }
 
 .mode-button, .selcted-mode-button {
-  flex-grow: 1;
-  height: 25px;
   background-color: white;
   border: transparent;
   border-bottom: 1px solid #ddd;
+  flex-grow: 1;
+  height: 25px;
 }
 
 .mode-button:focus {
@@ -53,35 +60,39 @@
 }
 
 .repeat-options-container {
+  align-items: stretch;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
 }
 
 .input-container {
-  flex-grow: 1;
-  display: flex;
   align-items: center;
-  margin: 0px 5px 10px 5px;
+  display: flex;
+  flex-grow: 1;
+  margin: 3px;
 }
 
 .input-label, .never-end-checkbox-label {
-  margin-bottom: 3px;
-  /*font-weight: bold;*/
+  margin-bottom: 2px;
 }
 
 .input-label {
+  margin-left: 30px;
+  min-width: 100px;
   text-align: right;
   width: 100px;
-  min-width: 100px;
-  margin-left: 35px;
 }
 
 .input-control, .custom-options-container {
   flex: 1;
   height: 20px;
-  padding: 0px;
   margin: 0px 100px 0px 10px;
+  padding: 0px;
+}
+
+.custom-options-container {
+  display: flex;
+  align-items: stretch;
 }
 
 #end-date-control {
@@ -94,20 +105,14 @@
   width: 80px;
 }
 
-.custom-options-container {
-  display: flex;
-  align-items: stretch;
-}
-
 .custom-option, .selected-custom-option {
+  background-color: transparent;
+  border-width: 0px;
+  cursor: pointer;
   flex: 1;
   padding: 0px;
-  border-width: 0px;
-  background-color: transparent;
-  cursor: pointer;
-  user-select: none;
   text-align: center;
-  padding-top: 1px;
+  user-select: none;
 }
 
 .custom-option {
@@ -116,7 +121,6 @@
 
 .custom-option:hover {
   color: #777;
-  /*border-bottom: 2px solid #eee;*/
 }
 
 .selected-custom-option {
@@ -126,20 +130,19 @@
 
 #month-options-container {
   margin-left: 55px;
-  /*//biktop*/
-  /*margin-right: */
-  justify-content: center;
+  height: 20px;
+  display: flex;
 }
 
 .month-custom-option {
   flex: 0;
-  white-space: nowrap;
   margin-right: 10px;
+  white-space: nowrap;
 }
 
 .calendar-container {
-  display: flex;
   flex: 1;
-  justify-content: center;
-  align-items: center;
+  margin: 0px 40px;
+  display: flex;
+  align-items: stretch;
 }

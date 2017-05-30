@@ -11,108 +11,111 @@
       <span class="repeat-mode-container-gap"></span>
     </div>
 
-    <!--once-->
-    <div class="input-container" *ngIf="isLayoutVisible(repeatModes.once)">
-      <label for="date-input" class="input-label">
-        Date:
-      </label>
-      <input
-        #date
-        id="date-input"
-        class="input-control"
-        type="date"
-        value="{{getStartDate() | date:getDateFormat()}}"
-        (input)="setStartDate(date.valueAsDate)"
-        (wheel)="onDateInputWheel()">
-    </div>
-
-    <!--repeat-->
-    <div class="repeat-options-container" *ngIf="!isLayoutVisible(repeatModes.once)">
-      <!--weekly-->
-      <div class="input-container" *ngIf="isLayoutVisible(repeatModes.weekly)">
-        <label for="week-days-container" class="input-label">
-          Repeat on:
-        </label>
-        <div id="week-days-container" class="custom-options-container">
-          <span *ngFor="let day of getDaysOfWeek()"
-            [ngClass]="weekDayIsSelected(day) ? 'selected-custom-option' : 'custom-option'"
-            (click)="onDayOfWeekClick(day)">
-            {{getDayName(day)}}
-          </span>
-        </div>
-      </div>
-
-      <!--monthly-->
-      <div class="input-container" *ngIf="isLayoutVisible(repeatModes.monthly)">
-        <div id="month-options-container" class="custom-options-container">
-          <span
-            [ngClass]="[!getUseDayOfTheLastWeek() ? 'selected-custom-option' : 'custom-option', 'month-custom-option']"
-            (click)="setUseDayOfTheLastWeek(false)">
-            Day of Month
-          </span>
-          <span
-            [ngClass]="[getUseDayOfTheLastWeek() ? 'selected-custom-option' : 'custom-option', 'month-custom-option']"
-            (click)="setUseDayOfTheLastWeek(true)">
-            Day of the last week ({{getStartDate() | date:'EE'}})
-          </span>
-        </div>
-      </div>
-
-      <!--every-->
-      <div class="input-container">
-        <label for="repeat-every-control" class="input-label">
-          Repeat every:
+    <div class="inputs-container">
+      <!--once-->
+      <div class="input-container" *ngIf="isLayoutVisible(repeatModes.once)">
+        <label for="date-input" class="input-label">
+          Date:
         </label>
         <input
-          #everyCtrl
-          id="repeat-every-control"
-          class="input-control"
-          type="number"
-          min="1"
-          max="30"
-          value="{{getRepeatEvery()}}"
-          (input)="setRepeatEvery(everyCtrl.value)">
-      </div>
-
-      <!-- dates -->
-      <div class="input-container">
-        <label for="start-date-control" class="input-label">
-          Starts on:
-        </label>
-        <input
-          #startDate
-          id="start-date-control"
+          #date
+          id="date-input"
           class="input-control"
           type="date"
           value="{{getStartDate() | date:getDateFormat()}}"
-          (input)="setStartDate(startDate.valueAsDate)"
+          (input)="setStartDate(date.valueAsDate)"
           (wheel)="onDateInputWheel()">
       </div>
-      <div class="input-container">
-        <label for="end-date-control" class="input-label">
-          Ends on:
-        </label>
-        <input
-          #endDate
-          id="end-date-control"
-          class="input-control"
-          type="date"
-          value="{{getEndDate() | date:getDateFormat()}}"
-          (input)="setEndDate(endDate.valueAsDate)"
-          (wheel)="onDateInputWheel()"
-          [disabled]="getNeverEnd()">
-        <input
-          #never
-          id="never-end-checkbox"
-          type="checkbox"
-          [checked]="getNeverEnd()"
-          (change)="setNeverEnd(never.checked)">
-        <label for="never-end-checkbox" class="never-end-checkbox-label">
-          never
-        </label>
+
+      <!--repeat-->
+      <div class="repeat-options-container" *ngIf="!isLayoutVisible(repeatModes.once)">
+        <!--weekly-->
+        <div class="input-container" *ngIf="isLayoutVisible(repeatModes.weekly)">
+          <label for="week-days-container" class="input-label">
+            Repeat on:
+          </label>
+          <div id="week-days-container" class="custom-options-container">
+            <span *ngFor="let day of getDaysOfWeek()"
+              [ngClass]="weekDayIsSelected(day) ? 'selected-custom-option' : 'custom-option'"
+              (click)="onDayOfWeekClick(day)">
+              {{getDayName(day)}}
+            </span>
+          </div>
+        </div>
+
+        <!--monthly-->
+        <div class="input-container" *ngIf="isLayoutVisible(repeatModes.monthly)">
+          <div id="month-options-container">
+            <span
+              [ngClass]="[!getUseDayOfTheLastWeek() ? 'selected-custom-option' : 'custom-option', 'month-custom-option']"
+              (click)="setUseDayOfTheLastWeek(false)">
+              Day of Month
+            </span>
+            <span
+              [ngClass]="[getUseDayOfTheLastWeek() ? 'selected-custom-option' : 'custom-option', 'month-custom-option']"
+              (click)="setUseDayOfTheLastWeek(true)">
+              Day of the last week ({{getStartDate() | date:'EE'}})
+            </span>
+          </div>
+        </div>
+
+        <!--every-->
+        <div class="input-container">
+          <label for="repeat-every-control" class="input-label">
+            Repeat every:
+          </label>
+          <input
+            #everyCtrl
+            id="repeat-every-control"
+            class="input-control"
+            type="number"
+            min="1"
+            max="30"
+            value="{{getRepeatEvery()}}"
+            (input)="setRepeatEvery(everyCtrl.value)">
+        </div>
+
+        <!-- dates -->
+        <div class="input-container">
+          <label for="start-date-control" class="input-label">
+            Starts on:
+          </label>
+          <input
+            #startDate
+            id="start-date-control"
+            class="input-control"
+            type="date"
+            value="{{getStartDate() | date:getDateFormat()}}"
+            (input)="setStartDate(startDate.valueAsDate)"
+            (wheel)="onDateInputWheel()">
+        </div>
+        <div class="input-container">
+          <label for="end-date-control" class="input-label">
+            Ends on:
+          </label>
+          <input
+            #endDate
+            id="end-date-control"
+            class="input-control"
+            type="date"
+            value="{{getEndDate() | date:getDateFormat()}}"
+            (input)="setEndDate(endDate.valueAsDate)"
+            (wheel)="onDateInputWheel()"
+            [disabled]="getNeverEnd()">
+          <input
+            #never
+            id="never-end-checkbox"
+            type="checkbox"
+            [checked]="getNeverEnd()"
+            (change)="setNeverEnd(never.checked)">
+          <label for="never-end-checkbox" class="never-end-checkbox-label">
+            never
+          </label>
+        </div>
       </div>
     </div>
   </div>
+
 
   <div class="calendar-container">
     <calendar [onCheckIfDateIsSelected]="onCheckIfDateIsSelected">Loading ...</calendar>

@@ -48,6 +48,10 @@ export class CalendarComponent implements OnInit {
     return this.viewModel.getCurrentMonthName();
   }
 
+  isCurrentMonth(date: Date): boolean {
+    return this.viewModel.getCurrentMonth() === date.getMonth();
+  }
+
   getCurrentYear(): number {
     return this.viewModel.getCurrentYear();
   }
@@ -76,12 +80,16 @@ export class CalendarComponent implements OnInit {
     this.viewModel.dayOfWeekActivated(dayOfWeekNumber);
   }
 
-  getWeekDayCellClass(weekDay: number): string {
-    return 'calendar-cell';
+  getTodaysDate(): Date {
+    return new Date();
   }
 
-  getDayCellClass(date: Date): string {
-    return this.viewModel.dateIsSelected(date) ? 'calendar-cell calendar-cell-selected' : 'calendar-cell';
+  goToToday(): void {
+    this.viewModel.goToDate(new Date());
+  }
+
+  dateIsSelected(date: Date): boolean {
+    return this.viewModel.dateIsSelected(date);
   }
 
 }
