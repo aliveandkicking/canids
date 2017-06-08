@@ -1,12 +1,16 @@
 <pl-popup #popupComponent>
   <div class="root">
     <div class="header">
-      <button class="header-button" (click)="cancel()" >
-        Cancel
-      </button>
-      <button class="header-button" (click)="save()">
-        Save
-      </button>
+      <span class="header-span" (click)="cancel()" >
+        <div class="header-span-text">
+          Cancel
+        </div>
+      </span>
+      <span class="header-span" (click)="save()">
+        <div class="header-span-text">
+          Save
+        </div>
+      </span>
     </div>
     <div class="edit-task-container">
       <edit-task #editTaskComponent></edit-task>

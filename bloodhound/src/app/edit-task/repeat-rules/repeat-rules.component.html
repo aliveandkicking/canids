@@ -118,7 +118,12 @@
 
 
   <div class="calendar-container">
-    <calendar [onCheckIfDateIsSelected]="onCheckIfDateIsSelected">Loading ...</calendar>
+    <pl-calendar
+      [checkIfDateIsSelected]="onCheckIfDateIsSelected"
+      [dateClick]="onCalendarDateClick"
+      [dayOfWeekClick]="onCalendarDayOfWeekClick">
+      Loading ...
+    </pl-calendar>
   </div>
 
 </div>

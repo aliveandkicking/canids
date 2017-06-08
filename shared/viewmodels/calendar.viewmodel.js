@@ -15,6 +15,7 @@ export class CalendarViewModel {
 
     this._onCheckIfDateIsSelected = null
     this._onDateActivated = null
+    this._onDayOfWeekActivated = null
   }
 
   getCurrentYear () {
@@ -113,6 +114,12 @@ export class CalendarViewModel {
     }
   }
 
+  dayOfWeekActivated (dayOfWeek) {
+    if (this._onDayOfWeekActivated) {
+      this._onDayOfWeekActivated(dayOfWeek)
+    }
+  }
+
   dateIsSelected (date) {
     return (
       this._onCheckIfDateIsSelected ? this._onCheckIfDateIsSelected(date) : false)
@@ -129,6 +136,10 @@ export class CalendarViewModel {
 
   setOnDateActivated (event) {
     this._onDateActivated = event
+  }
+
+  setOnDayOfWeekActivated (event) {
+    this._onDayOfWeekActivated = event
   }
 
   goToDate (date) {

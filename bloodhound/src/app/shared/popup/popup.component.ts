@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./popup.component.css']
 })
 export class PopupComponent implements OnInit {
-  private isVisible = true;
+  private isVisible = false;
 
   constructor() { }
 

@@ -24,4 +24,7 @@ export declare class RepeatRulesViewModel {
 
   getRepeatModeList(): {id: number, name: string, title: string}[];
   containsDate(date: Date): boolean;
+
+  selectDayOfWeek (dayOfWeek: number): void;
+  selectDate (date: Date): void;
 }

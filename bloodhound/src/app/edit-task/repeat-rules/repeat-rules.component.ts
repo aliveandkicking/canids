@@ -10,7 +10,7 @@ import { RepeatRulesViewModel } from '../../../../../shared/viewmodels/repeat-ru
   styleUrls: ['./repeat-rules.component.css']
 })
 export class RepeatRulesComponent implements OnInit {
-  @Input() viewModel: RepeatRulesViewModel = null
+  @Input() viewModel: RepeatRulesViewModel = null;
 
   repeatModes = {}
 
@@ -18,6 +18,8 @@ export class RepeatRulesComponent implements OnInit {
     private dateHelper: DateHelperService
   ) {
     this.onCheckIfDateIsSelected = this.onCheckIfDateIsSelected.bind(this);
+    this.onCalendarDayOfWeekClick = this.onCalendarDayOfWeekClick.bind(this);
+    this.onCalendarDateClick = this.onCalendarDateClick.bind(this);
   }
 
   ngOnInit() {
@@ -110,6 +112,14 @@ export class RepeatRulesComponent implements OnInit {
     this.viewModel.setNeverEnd(checked)
   }
 
-  onDateInputWheel() { } // needed to swith on incr. by scroll
+  onDateInputWheel() { } // needed to switch on incr. by scroll
+
+  onCalendarDateClick (date: Date) {
+    this.viewModel.selectDate(date);
+  }
+
+  onCalendarDayOfWeekClick (dayOfWeek: number) {
+    this.viewModel.selectDayOfWeek(dayOfWeek);
+  }
 
 }

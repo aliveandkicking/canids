@@ -67,6 +67,9 @@ class RepeatRulesModel extends BaseModel {
   setStartDate (date) {
     if (date) {
       this._startDate = dateUtils.clearTime(date)
+      if (this._endDate.getTime() < this._startDate.getTime()) {
+        this.setEndDate(this._startDate)
+      }
     }
   }
 
@@ -75,9 +78,7 @@ class RepeatRulesModel extends BaseModel {
   }
 
   setEndDate (date) {
-    if (date) {
-      this._endDate = date ? dateUtils.clearTime(date) : null
-    }
+    this._endDate = date ? dateUtils.clearTime(date) : null
   }
 
   getRepeatMode () {

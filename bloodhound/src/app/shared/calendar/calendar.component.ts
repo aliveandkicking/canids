@@ -3,7 +3,7 @@ import { CreateViewModelToken, createViewModel } from '../../services/create-vie
 import { CalendarViewModel } from '../../../../../shared/viewmodels/calendar.viewmodel';
 
 @Component({
-  selector: 'calendar',
+  selector: 'pl-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css'],
   providers: [{
@@ -12,16 +12,18 @@ import { CalendarViewModel } from '../../../../../shared/viewmodels/calendar.vie
   }]
 })
 export class CalendarComponent implements OnInit {
-  @Input()onDateClick: (date: Date) => void = null;
-  @Input()onCheckIfDateIsSelected: (date: Date) => boolean = null;
+  @Input()dateClick: (date: Date) => void = null;
+  @Input()dayOfWeekClick: (dayOfWeek: number) => void = null;
+  @Input()checkIfDateIsSelected: (date: Date) => boolean = null;
 
   constructor(
     @Inject(CreateViewModelToken) private viewModel: CalendarViewModel
   ) { }
 
   ngOnInit() {
-    this.viewModel.setOnCheckIfDateIsSelected(this.onCheckIfDateIsSelected);
-    this.viewModel.setOnDateActivated(this.onDateClick);
+    this.viewModel.setOnCheckIfDateIsSelected(this.checkIfDateIsSelected);
+    this.viewModel.setOnDateActivated(this.dateClick);
+    this.viewModel.setOnDayOfWeekActivated(this.dayOfWeekClick);
   }
 
   getCurrentDates(): Date[][] {

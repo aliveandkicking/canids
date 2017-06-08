@@ -1,7 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
 
 body {
-    background-color: #ffffff;
+    --main-theme-color: #1ad1ff;
+    --main-theme-color-heavy: #00a3cc;
+    --main-theme-color-light: #b4e7fd;
+
+
+    --text-color-hover: #00add9;
+    --inactive-text-color: #777;
+    --header-color: var(--main-theme-color);
+    --header-button-background: var(--main-theme-color-heavy);
+    --header-button-background-hover: var(--text-color-hover);
+
+    --border-color: #eee;
+
+    background-color: white;
     font: small/normal Arial,sans-serif;
-    /*font-size: 16px;*/
 }

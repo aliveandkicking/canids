@@ -1,24 +1,22 @@
 <div class="root">
 
   <div class="header">
-    <span class="navigation-button" (click)="onPrev()">
-      <img src="../../../assets/prev.png" class="naviagation-button-image">
+    <span class="navigation-span" (click)="onPrev()">
+      <img src="../../../assets/prev.png" class="naviagation-span-image">
     </span>
-    <span class="header-caption-container">
+    <span class="header-caption-container" (click)="showMonths()">
       <span
         class="displayed-month-header-caption"
-        *ngIf="!isMonthMode()"
-        (click)="showMonths()">
+        *ngIf="!isMonthMode()">
         {{getMonthName()}}
       </span>
       <span
-        class="displayed-year-header-caption"
-        (click)="showMonths()">
+        class="displayed-year-header-caption">
         {{getCurrentYear()}}
       </span>
     </span>
-    <span class="navigation-button" (click)="onNext()">
-      <img src="../../../assets/next.png" class="naviagation-button-image">
+    <span class="navigation-span" (click)="onNext()">
+      <img src="../../../assets/next.png" class="naviagation-span-image">
     </span>
   </div>
 
@@ -39,7 +37,7 @@
           [ngClass]="dateIsSelected(day) ? 'day-cell-selected' : 'day-cell'"
           (click)="onDayClick(day)">
             <span
-              [ngClass]="isCurrentMonth(day) ? '' : 'date-caption'">
+              [ngClass]="isCurrentMonth(day) ? '' : 'sibling-date-caption'">
               {{day.getDate()}}
             </span>
         </span>

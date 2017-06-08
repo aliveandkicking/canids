@@ -12,7 +12,7 @@ export declare class CalendarViewModel {
   getMonths(): {index: number; name: string}[][];
   setMonthMode(isMonthMode: boolean): void;
   isMonthMode(): boolean;
-  dateIsSelected(date: Date): boolean; 
+  dateIsSelected(date: Date): boolean;
   
   dateActivated(date: Date): void;
   monthActivated(month: number): void;
@@ -24,4 +24,5 @@ export declare class CalendarViewModel {
 
   setOnCheckIfDateIsSelected(event: (date: Date) => boolean): void;
   setOnDateActivated(event: (date: Date) => void): void;
+  setOnDayOfWeekActivated(event: (dayOfWeek: number) => void): void;
 }

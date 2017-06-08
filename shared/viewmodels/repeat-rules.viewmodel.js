@@ -120,4 +120,31 @@ export class RepeatRulesViewModel {
     return this._model.containsDate(date)
   }
 
+  _changeCloseEdgeDate (date) {
+    if (!this.getNeverEnd()) {
+      if (Math.abs(date.getTime() - this.getEndDate().getTime()) <
+          Math.abs(date.getTime() - this.getStartDate().getTime())) {
+        this.setEndDate(date)
+        return
+      }
+    }
+    this.setStartDate(date)
+  }
+
+  selectDayOfWeek (dayOfWeek) {
+    if (this._model.getRepeatMode() === REPEAT_MODE.WEEKLY) {
+      this.changeWeekDayToRepeat(dayOfWeek)
+    } else {
+      this._changeCloseEdgeDate(
+        dateUtils.incDay(dateUtils.getStartOfWeek(this._model.getStartDate()),
+          dateUtils.mondayBasedDayOfWeekIdx(dayOfWeek)))
+    }
+  }
+
+  selectDate (date) {
+    if (date) {
+      this._changeCloseEdgeDate(date)
+    }
+  }
+
 }

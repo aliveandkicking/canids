@@ -7,7 +7,7 @@
 }
 
 .body-section {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--border-color);
   margin-bottom: 10px;
 }
 
@@ -27,7 +27,7 @@
 .mode-button, .selcted-mode-button {
   background-color: white;
   border: transparent;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--border-color);
   flex-grow: 1;
   height: 25px;
 }
@@ -41,20 +41,21 @@
 }
 
 .mode-button {
-  color: #999;
+  color: var(--inactive-text-color);
+  cursor: pointer;
 }
 
 .mode-button:hover {
-  color: #333;
+  color: var(--text-color-hover);
 }
 
 .repeat-mode-container-gap {
   width: 10px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .selcted-mode-button {
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
   border-bottom: transparent;
   font-weight: bold;
 }
@@ -119,13 +120,13 @@
   color: #ccc;
 }
 
-.custom-option:hover {
-  color: #777;
+.custom-option:hover, .selected-custom-option:hover {
+  color: var(--text-color-hover);
 }
 
 .selected-custom-option {
   font-weight: bold;
-  border-bottom: 2px solid #ccc;
+  border-bottom: 2px solid var(--main-theme-color-heavy);
 }
 
 #month-options-container {
