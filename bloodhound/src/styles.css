@@ -1,8 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 
 body {
-    --main-theme-color: #1ad1ff;
+    --main-theme-color-heavy-2: #007a99;
     --main-theme-color-heavy: #00a3cc;
+    --main-theme-color: #1ad1ff;
     --main-theme-color-light: #b4e7fd;
 
 
@@ -16,4 +17,5 @@ body {
 
     background-color: white;
     font: small/normal Arial,sans-serif;
+    margin: 0px;
 }

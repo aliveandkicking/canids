@@ -1,65 +1,57 @@
 .root {
-    min-width: 300px;
-    background-color: #e6e6e6;
+    min-width: 700px;
+    background-color: var(--header-color);
 }
 
 .header {
-    height: 50px;
+    height: 40px;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    align-items: center;
     border-bottom: 1px solid rgba(220, 220, 220, 0.7);
 }
 
-.new-task-button-container {
-    flex-grow: 1;
-    width: 0px;
-}
-
-.cation-container {
-    flex-grow: 1;
-    width: 0px;
-    display: flex;
-    align-items: center;
-}
-
 .caption {
-    flex-grow: 1;
+    flex: 1;
     text-align: center;
-    margin: 0px;
-    color: darkslategrey;
-}
-
-.navigation-buttons-containter{
-    flex-grow: 1;
-    display: flex;
-    justify-content: flex-end;
-    margin-right: 5px;
-    width: 0px;
+    /*color: var(--main-theme-color-heavy-2);*/
+    /*font-weight: bold;*/
 }
 
 .new-task-button, .navigation-button, .today-button {
-    margin: 5px 0px;
-    height: 40px;
-    width: 40px;
-    min-width: 40px;
-    padding: 0px 0px;
+    height: 32px;
+    width: 32px;
+    display: flex;
+    justify-content: center;
+    background-color: var(--header-button-background);
+    border-radius: 3px;
+    margin-right: 4px;
+    cursor: pointer;
+    user-select: none;
 }
 
 .new-task-button {
-    width: 40px;
-    margin-left: 5px
+    margin: 0px 85px 0px 4px;
 }
 
 .today-button {
     width: 75px;
     min-width: 75px;
-    margin-right: 5px
+    display: flex;
+    align-items: center;
+}
+
+.new-task-button:hover, .navigation-button:hover, .today-button:hover {
+    background-color: var(--header-button-background-hover);
+}
+
+.today-button-caption {
+    color: white;
 }
 
 .button-image {
-    width: 40%;
-    height: 40%;
-    margin-top: 2px;
+    flex: 1;
+    width: 0px;
+    margin: 9px;
 }
 

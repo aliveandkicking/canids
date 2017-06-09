@@ -4,9 +4,9 @@
   </div>
 
   <div class="body">
-      <div *ngFor="let taskViewModel of getTasksViewModels()">
+      <span class="task-container" *ngFor="let taskViewModel of getTasksViewModels()">
         <app-day-task [viewModel]="taskViewModel"></app-day-task>
-      </div>
+      </span>
   </div>
 
   <div class="bottom-panel">

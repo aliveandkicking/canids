@@ -1,26 +1,22 @@
 <div class="root">
   <div class="header">
-    <div class="new-task-button-container">
-      <button class="new-task-button" (click)="goToNewTaskPage()">
-        <img class="button-image" src="../../../assets/add.png">
-      </button>
-    </div>
-    <div class="cation-container">
-      <p class="caption">
+    <span class="new-task-button" (click)="goToNewTaskPage()">
+      <img class="button-image" src="../../../assets/white-plus.png">
+    </span>
+    <span class="caption">
         {{appweek.getCaption()}}
-      </p>
-    </div>
-    <div class="navigation-buttons-containter">
-      <button class="today-button" (click)="appweek.today()">
+    </span>
+    <span class="today-button" (click)="appweek.today()">
+      <span class="today-button-caption">
         Today
-      </button>
-      <button class="navigation-button" (click)="appweek.prev()">
-        <img class="button-image" src="../../../assets/prev.png">
-      </button>
-      <button class="navigation-button" (click)="appweek.next()">
-        <img class="button-image" src="../../../assets/next.png">
-      </button>
-    </div>
+      </span>
+    </span>
+    <span class="navigation-button" (click)="appweek.prev()">
+      <img class="button-image" src="../../../assets/white-arrow-left.png">
+    </span>
+    <span class="navigation-button" (click)="appweek.next()">
+      <img class="button-image" src="../../../assets/white-arrow-right.png">
+    </span>
   </div>
   <div class="content">
     <app-week #appweek></app-week>

@@ -5,6 +5,7 @@
     justify-content: space-between;
     align-items: stretch;
 }
+
 .header {
     text-align: center;
     background: white;
@@ -12,9 +13,25 @@
 
 .body {
     background: white;
-    flex-grow: 1;
-    padding: 5px 3px;
+    flex: 1;
     border: 1px solid rgba(220, 220, 220, 0.7);
+    display: flex;
+    align-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.task-container {
+    --edge-size: 80px;
+    min-height: var(--edge-size);
+    max-height: var(--edge-size);
+    min-width: var(--edge-size);
+    width: var(--edge-size);
+    margin: 2px;
+    display: flex;
+
+    flex: 1;
+
+    border: 1px solid red;
 }
 
 .bottom-panel {

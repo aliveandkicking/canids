@@ -1,10 +1,35 @@
-<div class="root" (dblclick)="changeState()">
-  <span class="task-name-container">
-    <p [ngClass]="!isDone() ? 'task-name' : 'task-name, task-name-done'">
-      {{getTaskName()}}
-    </p>
+<div
+  class="root"
+  [ngStyle]="{'background-color': getBackgroundColor()}"
+  (click)="changeState()"
+  (mouseenter)="changeHover(true)"
+  (mouseleave)="changeHover(false)">
+
+  <span class="show-full-description-mark-container">
+      <img class="show-full-description-mark" src="../../../assets/white-arrow-down.png">
   </span>
-  <span class="check-box"  (click)="changeState()">
-    <img *ngIf="isDone()" class="checked-image" src="../../../assets/checked.png">
-  </span>
+
+
+  <div class="info-container">
+
+    <div class="task-name-container" [ngClass]="isHover ? 'visible-info' : 'hidden-info'">
+      <span class="task-name">
+        {{getTaskName()}}
+      </span>
+    </div>
+
+    <div class="task-abr-container" [ngClass]="isHover ? 'hidden-info' : 'visible-info'">
+      <span class="task-abr">
+        {{getTaskNameAbbreviation()}}
+      </span>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <span class="check-box">
+      <img *ngIf="isDone()" class="checked-image" src="../../../assets/white-checkmark-256.png">
+    </span>
+  </div>
+
 </div>
