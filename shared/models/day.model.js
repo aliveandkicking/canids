@@ -21,6 +21,10 @@ export default class DayModel {
     return this._date
   }
 
+  isToday () {
+    return dateUtils.isToday(this._date)
+  }
+
   loaded () {
     this.onTaskListChangeEvents.forEach((callback) => {
       if (callback) {

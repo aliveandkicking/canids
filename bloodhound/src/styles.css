@@ -3,9 +3,10 @@
 body {
     --main-theme-color-heavy-2: #007a99;
     --main-theme-color-heavy: #00a3cc;
+    --main-theme-color-semi-heavy: #00b8e6;
     --main-theme-color: #1ad1ff;
     --main-theme-color-light: #b4e7fd;
-
+    --main-theme-color-light-2: #e6f7fe;
 
     --text-color-hover: #00add9;
     --inactive-text-color: #777;
@@ -18,4 +19,7 @@ body {
     background-color: white;
     font: small/normal Arial,sans-serif;
     margin: 0px;
+    position: absolute;
+    height: 100%;
+    width: 100%;
 }

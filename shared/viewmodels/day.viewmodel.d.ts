@@ -6,4 +6,5 @@ export declare class DayViewModel{
     getDayTasksViewModels(): DayTaskViewModel[];
     finalize(): void;
     setOnTaskListChange(callback: () => void): void;
+    isToday(): boolean;
 }

@@ -35,4 +35,8 @@ export class DayViewModel {
   setOnTaskListChange (callback) {
     this.onTaskListChange = callback
   }
+
+  isToday () {
+    return this._model.isToday()
+  } 
 }

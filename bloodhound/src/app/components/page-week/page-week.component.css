@@ -1,6 +1,9 @@
 .root {
     min-width: 700px;
-    background-color: var(--header-color);
+    height: 100%;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
 }
 
 .header {
@@ -8,30 +11,28 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    border-bottom: 1px solid rgba(220, 220, 220, 0.7);
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--main-theme-color-heavy)
 }
 
 .caption {
     flex: 1;
     text-align: center;
-    /*color: var(--main-theme-color-heavy-2);*/
-    /*font-weight: bold;*/
+    color: white;
 }
 
 .new-task-button, .navigation-button, .today-button {
-    height: 32px;
-    width: 32px;
+    height: 40px;
+    width: 40px;
     display: flex;
     justify-content: center;
     background-color: var(--header-button-background);
-    border-radius: 3px;
-    margin-right: 4px;
     cursor: pointer;
-    user-select: none;
+
 }
 
 .new-task-button {
-    margin: 0px 85px 0px 4px;
+    margin: 0px 85px 0px 0px;
 }
 
 .today-button {
@@ -42,7 +43,7 @@
 }
 
 .new-task-button:hover, .navigation-button:hover, .today-button:hover {
-    background-color: var(--header-button-background-hover);
+    background-color: var(--main-theme-color-heavy-2);
 }
 
 .today-button-caption {
@@ -52,6 +53,12 @@
 .button-image {
     flex: 1;
     width: 0px;
-    margin: 9px;
+    margin: 12px;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
 }
 

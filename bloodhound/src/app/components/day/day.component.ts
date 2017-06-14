@@ -32,18 +32,38 @@ export class DayComponent implements OnInit, OnDestroy {
     return this.viewModel.getDayTasksViewModels();
   }
 
-  getSummaryText() : string {
-    let done = 0;
+  getNumberOfDoneTasks(): number {
+    let result = 0;
     this.getTasksViewModels().forEach(viewModel => {
       if (viewModel.getIsDone()) {
-        done++;
+        result++;
       }
     });
+    return result;
+  }
+
+  getPercentageoOfDoneTasks(): number {
+    return Math.round(this.getNumberOfDoneTasks() * 100 / this.getTasksViewModels().length);
+  }
+
+  getSummaryText(): string {
+    const done = this.getNumberOfDoneTasks();
     if (done === 0) {
-      return `total ${this.getTasksViewModels().length} task(s)`
-    } else {
-      return `${done} done, ${this.getTasksViewModels().length - done} to go`
+      return (
+        `${this.getTasksViewModels().length} task` +
+         (this.getTasksViewModels().length === 1 ? '' : 's')
+      );
     }
+    if (done === this.getTasksViewModels().length) {
+      return 'Complete';
+    }
+
+    const percentsDone = Math.round(done * 100 / this.getTasksViewModels().length);
+    return `${done} of ${this.getTasksViewModels().length} (${this.getPercentageoOfDoneTasks()}%)`;
+  }
+
+  isToday(): boolean {
+    return this.viewModel.isToday();
   }
 
 }

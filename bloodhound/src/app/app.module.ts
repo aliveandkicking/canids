@@ -16,6 +16,7 @@ import { WeekComponent } from './components/week/week.component';
 import { DayTaskComponent } from './components/day-task/day-task.component';
 
 import { EditTaskModule } from './edit-task/edit-task.module';
+import { DayTaskRootDirective } from './components/day-task/day-task-root.directive';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { EditTaskModule } from './edit-task/edit-task.module';
     DayComponent,
     WeekComponent,
     DayTaskComponent,
-    appRouterComponents
+    appRouterComponents,
+    DayTaskRootDirective
   ],
   imports: [
     BrowserModule,

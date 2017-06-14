@@ -1,6 +1,8 @@
-<div class="root">
-  <div class="header">
-    {{getDate() | date:'EEE dd'}}
+<div class="root" [ngClass]="isToday() ? 'root-today' : ''">
+  <div class="header" [ngClass]="isToday() ? 'header-today-backgound' : 'header-backgound'">
+    <span [ngClass]="isToday() ? 'date-text-today' : 'date-text'" >
+      {{getDate() | date:'EEE dd'}}
+    </span>
   </div>
 
   <div class="body">
@@ -9,7 +11,18 @@
       </span>
   </div>
 
-  <div class="bottom-panel">
-    {{getSummaryText()}}
+  <div class="footer">
+    <span
+      class="progress-bar"
+      [ngStyle]="{width: getPercentageoOfDoneTasks() + '%'}"
+      [ngClass]="!isToday() ? 'zero-opacity' : ''">
+    </span>
+
+    <div class="progress-text-container">
+      <span class="progress-text">
+        {{getSummaryText()}}
+      </span>
+    </div>
+
   </div>
 </div>

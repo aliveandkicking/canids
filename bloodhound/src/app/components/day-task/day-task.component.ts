@@ -9,8 +9,6 @@ import { DayTaskViewModel } from '../../../../../shared/viewmodels/day-task.view
 export class DayTaskComponent implements OnInit {
   @Input() viewModel: DayTaskViewModel = null;
 
-  isHover = false;
-
   constructor() { }
 
   ngOnInit() { }
@@ -35,12 +33,12 @@ export class DayTaskComponent implements OnInit {
     return this.viewModel.getTaskNameAbbreviation();
   }
 
-  changeHover(isHover) {
-    // if (isHover !== this.isHover) {
-    //   console.log(isHover);
-    //   console.log(this.isHover);
-    // }
-    this.isHover = isHover;
+  setShowFullInfo(showFullInfo: boolean): void {
+    this.viewModel.setShowFullInfo(showFullInfo);
   }
-}
 
+  getShowFullInfo(): boolean {
+    return this.viewModel.getShowFullInfo();
+  }
+
+}

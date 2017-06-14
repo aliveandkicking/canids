@@ -149,4 +149,5 @@ export class CalendarViewModel {
       this._needRecalcDates = true
     }
   }
+
 }

@@ -1,39 +1,91 @@
 .root {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: stretch;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.root-today {
+  background-color: var(--main-theme-color-light-2);
+}
+
+.root:hover .footer .progress-bar {
+  opacity: 1;
 }
 
 .header {
-    text-align: center;
-    background: white;
+  height: 25px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-backgound {
+  background-color: var(--main-theme-color-heavy);
+}
+
+.header-today-backgound {
+  background-color: var(--main-theme-color-semi-heavy);
+}
+
+.date-text {
+  color: white;
+}
+
+.date-text-today {
+  color: white;
+  /*color: var(--main-theme-color-heavy-2);*/
+  font-weight: bold;
 }
 
 .body {
-    background: white;
-    flex: 1;
-    border: 1px solid rgba(220, 220, 220, 0.7);
-    display: flex;
-    align-content: flex-start;
-    flex-wrap: wrap;
+  height: 0px;
+  flex: 1;
+  display: flex;
+  align-content: flex-start;
+  flex-wrap: wrap;
+  overflow-y: auto;
+  padding: 3px 3px;
+  border-right: 1px solid var(--border-color)
 }
 
 .task-container {
-    --edge-size: 80px;
-    min-height: var(--edge-size);
-    max-height: var(--edge-size);
-    min-width: var(--edge-size);
-    width: var(--edge-size);
-    margin: 2px;
-    display: flex;
-
-    flex: 1;
-
-    border: 1px solid red;
+  --edge-size: 80px;
+  min-height: var(--edge-size);
+  max-height: var(--edge-size);
+  min-width: var(--edge-size);
+  width: var(--edge-size);
+  margin: 1px;
+  display: flex;
+  flex: 1;
 }
 
-.bottom-panel {
-    text-align: center;
+.footer {
+  height: 26px;
+  background-color: var(--main-theme-color-heavy);
+  display: flex;
+  flex-direction: column;
+}
+
+.progress-text-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.progress-text {
+  color: white;
+}
+
+.progress-bar {
+  height: 5px;
+  background-color: var(--main-theme-color-heavy-2);
+  transition: opacity 1s;
+}
+
+.zero-opacity {
+  opacity: 0;
 }
