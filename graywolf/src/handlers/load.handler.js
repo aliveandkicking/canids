@@ -1,9 +1,10 @@
 let dbApi = require('../db-api').dbApi
 
-let load = function(entity, ids, callback) {
+//change to promise
+let load = function (entity, ids, callback) {
   dbApi.executeSql("SELECT * FROM load('" + entity + "', '" + JSON.stringify(ids) + "')",
     function (result) {
-      console.log(result.rows)
+      console.log('data rows:', result.rows)
       callback(result.rows)
     }
   )
@@ -16,6 +17,3 @@ module.exports = function (req, res){
 }
 
 module.exports.load = load
-
-
-

@@ -1,5 +1,5 @@
-import DayModel from '../models/day.model';
-import { DayTaskViewModel } from './day-task.viewmodel';
+import { DayModel } from '../models/day.model'
+import { DayTaskViewModel } from './day-task.viewmodel'
 
 export class DayViewModel {
   constructor () {

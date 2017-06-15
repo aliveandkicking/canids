@@ -1,7 +1,7 @@
-import { TaskModel } from './task.model'
-import { stringToColor } from '../utils/string-to-color'
+let TaskModel = require('./task.model').TaskModel
+let stringToColor = require('../utils/string-to-color').stringToColor
 
-export class DayTaskModel {
+class DayTaskModel {
   constructor (taskModel = new TaskModel(), onStateChange = null) {
     this.taskModel = taskModel
     this._isDone = false
@@ -50,3 +50,5 @@ export class DayTaskModel {
     return result
   }
 }
+
+module.exports.DayTaskModel = DayTaskModel
