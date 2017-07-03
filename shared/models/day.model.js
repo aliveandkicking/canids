@@ -7,14 +7,16 @@ class DayModel {
   constructor () {
     this.dayTasks = []
     this._date = null
-    this.onTaskListChangeEvents = [] // biktop is array realy needed ?
-    this.onCustomretrieveTask = null
+    this.afterTaskListChange = null
+    this.loadOnChanges = true
   }
 
   setDate (date) {
     if (!dateUtils.sameDay(date, this._date)) {
       this._date = dateUtils.clearTime(date)
-      this.load()
+      if (this.loadOnChanges) {
+        this.load()
+      }
     }
   }
 
@@ -27,11 +29,9 @@ class DayModel {
   }
 
   loaded () {
-    this.onTaskListChangeEvents.forEach((callback) => {
-      if (callback) {
-        callback()
-      }
-    })
+    if (this.afterTaskListChange) {
+      this.afterTaskListChange()
+    }
   }
 
   save () {
@@ -45,52 +45,29 @@ class DayModel {
     serverApi.save({id: id, entity: this.constructor.name, doneTaskIds})
   }
 
-  // retrieveTasks (callback) {
-  //   promise.then((transObjs) => {
-  //     this.dayTasks = []
-  //     transObjs.forEach((obj) => {
-  //       let task = new TaskModel()
-  //       this.dayTasks.push(new DayTaskModel(task.loadFromTransportObject(obj), () => {
-  //         this.save()
-  //       }))
-  //     })
-  //     callback()
-  //   })
-  // }
-
   load () {
-    serverApi.getTasksByDate(this._date)
-      .then(
-        (transObjs) => {
-          transObjs.forEach((object) => {
-            let dayTask = new DayTaskModel(
-              (new TaskModel()).loadFromTransportObject(object.task), () => {
-                this.save()
-              }
-            )
-            dayTask._isDone = object.isDone // biktop
-            this.dayTasks.push(dayTask)
-          })
-          this.loaded()
+    serverApi.getTasksByDate(this._date).then(transObjs => {
+      const dateStr = dateUtils.toString(this.getDate())
+      console.log('transObjs: ', transObjs)
+      const currentDateInfo = transObjs.find(obj => {
+        return obj.data.date === dateStr
+      })
+      this.loadFromTransportObject(currentDateInfo)
+    })
+  }
+
+  loadFromTransportObject (transportObject) {
+    this.dayTasks = []
+    transportObject.data.tasks.forEach(taskInfo => {
+      let dayTask = new DayTaskModel(
+        (new TaskModel()).loadFromTransportObject(taskInfo.task), () => {
+          this.save()
         }
       )
-
-    // this.retrieveTasks(() => {
-    //   let id = dateUtils.toString(this.getDate())
-
-    //   let transObj = {id: null, entity: this.constructor.name, tasks: []}
-    //   serverApi.load(this.constructor.name, id, transObj)
-    //     .then(() => {
-    //       this.dayTasks.forEach(dayTask => {
-    //         // biktop
-    //         let isDone = transObj.tasks.findIndex((task) => {
-    //           return ((task.taskId === dayTask.taskModel.id) && (task.isDone))
-    //         }) >= 0
-    //         dayTask._isDone = isDone
-    //       })
-    //       this.loaded()
-    //     })
-    // })
+      dayTask._isDone = taskInfo.isDone
+      this.dayTasks.push(dayTask)
+    })
+    this.loaded()
   }
 }
 

@@ -2,11 +2,11 @@ import { DayModel } from '../models/day.model'
 import { DayTaskViewModel } from './day-task.viewmodel'
 
 export class DayViewModel {
-  constructor () {
-    this._model = new DayModel()
+  constructor (dayModel = new DayModel()) {
+    this._model = dayModel
     this.dayTasksViewModels = []
     this.onTaskListChange = null
-    this._model.onTaskListChangeEvents.push(() => this.initTaskViewModels())
+    this._model.afterTaskListChange = this.initTaskViewModels.bind(this)
   }
 
   setDate (date) {
@@ -38,5 +38,5 @@ export class DayViewModel {
 
   isToday () {
     return this._model.isToday()
-  } 
+  }
 }

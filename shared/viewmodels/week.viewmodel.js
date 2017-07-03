@@ -5,17 +5,16 @@ import { DayViewModel } from './day.viewmodel'
 export class WeekViewModel {
   constructor () {
     this._model = new WeekModel()
-    this.days = []
-    this._initDays()
+    this.days = this.initDayViewModels()
+    this.onDataRefreshed = null
   }
 
-  _initDays () {
-    this.getDates().forEach((date, i) => {
-      if (!this.days[i]) {
-        this.days[i] = new DayViewModel()
-      }
-      this.days[i].setDate(date)
+  initDayViewModels () {
+    let result = []
+    this._model.days.forEach((dayModel, i) => {
+      result.push(new DayViewModel(dayModel))
     })
+    return result
   }
 
   getDates () {
@@ -24,7 +23,6 @@ export class WeekViewModel {
 
   setDate (date) {
     this._model.setDate(date)
-    this._initDays()
   }
 
   getCaption () {
@@ -43,23 +41,24 @@ export class WeekViewModel {
 
   today () {
     this._model.setDate(new Date())
-    this._initDays()
   }
 
   next () {
     this._model.next()
-    this._initDays()
   }
 
   prev () {
     this._model.prev()
-    this._initDays()
   }
 
   getDayViewModel (date) {
     return this.days.find((viewModel) => {
       return dateUtils.sameDay(viewModel.getDate(), date)
     })
+  }
+
+  setOnDataRefreshed (event) {
+    this.onDataRefreshed = event
   }
 
 }

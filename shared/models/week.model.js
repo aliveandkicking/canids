@@ -1,18 +1,35 @@
 import { BaseModel } from './base.model'
-import { dateUtils } from '../utils/dateutils';
-
+import { dateUtils } from '../utils/dateutils'
+import { DayModel } from './day.model'
 
 export class WeekModel extends BaseModel {
   constructor () {
     super()
-    //   this.days =
     this._date = null
-    this.setDate(new Date())
     this.mondayBased = true
+    this.days = []
+    this.setDate(new Date())
+  }
+
+  refreshDays () {
+
+
+  }
+
+
+  initDays () {
+    this.getDates().forEach((date, i) => {
+      if (!this.days[i]) {
+        this.days[i] = new DayModel()
+        // this.days[i].onGetCustomLoadPromise = this.getLoadDayPromise.bind(this)
+      }
+      this.days[i].setDate(date)
+    })
   }
 
   setDate (date) {
     this._date = dateUtils.getStartOfWeek(date, this.mondayBased)
+    this.initDays()
   }
 
   getDate () {
@@ -25,10 +42,12 @@ export class WeekModel extends BaseModel {
 
   next () {
     this.setDate(dateUtils.incDay(this.getDate(), dateUtils.DAYS_IN_WEEK))
+    this.initDays()
   }
 
   prev () {
     this.setDate(dateUtils.decDay(this.getDate(), dateUtils.DAYS_IN_WEEK))
+    this.initDays()
   }
 
   getDates () {
@@ -38,5 +57,4 @@ export class WeekModel extends BaseModel {
     }
     return result
   }
-
 }

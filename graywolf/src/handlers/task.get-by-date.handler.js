@@ -7,25 +7,35 @@ module.exports = function (req, res) {
   retrieveTasks((tasks) => {
     let result = []
     req.body.dates.forEach((dateStr) => {
+      let currDateTasks = {date: dateStr, tasks: []}
       let date = dateUtils.fromString(dateStr)
       tasks.forEach((task) => {
         if (task.repeatRules.containsDate(date)) {
-          result.push({task: task.saveToTransportObject(), isDone: 0})
+          currDateTasks.tasks.push({task: task.saveToTransportObject(), isDone: 0})
         }
       })
+      result.push({data: currDateTasks})
     })
 
     load(DayModel.name, req.body.dates, (rows) => {
       if ((rows) && (Array.isArray(rows))) {
         rows.forEach((row) => {
-          row.data.doneTaskIds.forEach(taskId => {
-            result.find(info => {
-              if (info.task.id === taskId) {
-                info.isDone = 1
-                return true
-              }
-            })
+          if (!row.data.doneTaskIds) {
+            return
+          }
+          const dateInfo = result.find(data => {
+            return data.date === row.data.id
           })
+          if (dateInfo) {
+            row.data.doneTaskIds.forEach(taskId => {
+              dateInfo.tasks.find(info => {
+                if (info.task.id === taskId) {
+                  info.isDone = 1
+                  return true
+                }
+              })
+          })
+          }
         })
       }
       res.send(result)

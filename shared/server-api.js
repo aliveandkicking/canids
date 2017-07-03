@@ -22,26 +22,27 @@ class ServerApi {
   }
 
   save (object) {
-      return this.post(constants.SAVE, object)
+    return this.post(constants.SAVE, object)
   }
 
   load (entity, id, object) {
-      let result = this.post(constants.LOAD, this.getLoadRequestObject(entity, id)).
-              then(responseText => {
-                  let transObjs = JSON.parse(responseText)
-                  if ((object) && (transObjs.length > 0)) {
-                      transportObjectProcessor.loadFromTempObject(object, transObjs[0].data)
-                  }
-                  return(transObjs)
-              }
-          )
-      return result
+    let result = this.post(constants.LOAD, this.getLoadRequestObject(entity, id)).
+        then(responseText => {
+          let transObjs = JSON.parse(responseText)
+          if ((object) && (transObjs.length > 0)) {
+            transportObjectProcessor.loadFromTempObject(object, transObjs[0].data)
+          }
+          return transObjs
+        }
+      )
+    return result
   }
 
   getTasksByDate (date) {
     const path = constants.TASK + constants.SEPARATOR + constants.GETBYDATE
     return this.post(path, {dates: [dateUtils.toString(date)]})
       .then(responseText => {
+        console.log('responseText ->>>> ', responseText)
         return JSON.parse(responseText)
       })
   }
