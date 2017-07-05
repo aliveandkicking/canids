@@ -42,7 +42,6 @@ class ServerApi {
     const path = constants.TASK + constants.SEPARATOR + constants.GETBYDATE
     return this.post(path, {dates: [dateUtils.toString(date)]})
       .then(responseText => {
-        console.log('responseText ->>>> ', responseText)
         return JSON.parse(responseText)
       })
   }

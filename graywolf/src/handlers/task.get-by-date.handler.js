@@ -23,12 +23,12 @@ module.exports = function (req, res) {
           if (!row.data.doneTaskIds) {
             return
           }
-          const dateInfo = result.find(data => {
-            return data.date === row.data.id
+          const dateInfo = result.find(resultRow => {
+            return resultRow.data.date === row.data.id
           })
           if (dateInfo) {
             row.data.doneTaskIds.forEach(taskId => {
-              dateInfo.tasks.find(info => {
+              dateInfo.data.tasks.find(info => {
                 if (info.task.id === taskId) {
                   info.isDone = 1
                   return true

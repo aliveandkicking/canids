@@ -1,7 +1,7 @@
 class DateUtils {
   constructor () {
     this.DATE_SEPARATOR = '/'
-    this.MILISECONDS_IN_DAY = 24 * 60 * 60 * 1000; // consider timezones change e.g. last sun of oct
+    this.MILISECONDS_IN_DAY = 24 * 60 * 60 * 1000 // consider timezones change e.g. last sun of oct
     this.DAYS_IN_WEEK = 7;
 
     [this.SU, this.MO, this.TU, this.WE, this.TH, this.FR, this.SA] = [0, 1, 2, 3, 4, 5, 6]
@@ -89,13 +89,21 @@ class DateUtils {
     return (element > 9) ? element : '0' + element
   }
 
+  toCustomString (date, separator) {
+    return [this.getElementAsString(date.getMonth() + 1), this.getElementAsString(date.getDate()), date.getFullYear()].join(separator)
+  }
+
   toString (date) {
-    return [this.getElementAsString(date.getMonth() + 1), this.getElementAsString(date.getDate()), date.getFullYear()].join(this.DATE_SEPARATOR)
+    return this.toCustomString(date, this.DATE_SEPARATOR)
+  }
+
+  fromCustomString (dateString, separator) {
+    let dateData = dateString.split(separator)
+    return new Date(dateData[2], parseInt(dateData[0]) - 1, dateData[1])
   }
 
   fromString (dateString) {
-    let dateData = dateString.split(this.DATE_SEPARATOR)
-    return new Date(dateData[2], parseInt(dateData[0]) - 1, dateData[1])
+    return this.fromCustomString(dateString, this.DATE_SEPARATOR)
   }
 }
 

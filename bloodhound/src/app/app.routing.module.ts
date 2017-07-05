@@ -10,8 +10,12 @@ const appRoutes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: '**',
+    path: 'week/:date',
     component: PageWeekComponent
+  },
+  {
+    path: '**',
+    redirectTo: 'week/07-07-2017'
   }
 ];
 

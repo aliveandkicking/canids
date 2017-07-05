@@ -5,19 +5,14 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule, appRouterComponents } from './app.routing.module';
 
-import { DateHelperService } from './services/date-helper.service';
-
+import { SharedModule } from './shared/shared.module';
+import { EditTaskModule } from './edit-task/edit-task.module';
+import { DateHelperService } from './services/date-helper.service'; // biktop merge
 import { AppComponent } from './app.component';
-import {
-  DayComponent
-} from './components';
-
+import { DayComponent } from './components';
 import { WeekComponent } from './components/week/week.component';
 import { DayTaskComponent } from './components/day-task/day-task.component';
-
-import { EditTaskModule } from './edit-task/edit-task.module';
 import { DayTaskRootDirective } from './components/day-task/day-task-root.directive';
-
 
 @NgModule({
   declarations: [
@@ -34,6 +29,7 @@ import { DayTaskRootDirective } from './components/day-task/day-task-root.direct
     HttpModule,
     RouterModule,
     AppRoutingModule,
+    SharedModule,
     EditTaskModule,
   ],
   providers: [

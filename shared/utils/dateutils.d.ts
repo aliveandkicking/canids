@@ -31,7 +31,9 @@ interface DateUtils {
   decodeDate (date: Date): number[],
   clearTime (date: Date): Date,
   getElementAsString(element: number): string,
+  toCustomString(date: Date, separator: string): string,
   toString(date: Date): string,
+  fromCustomString(dateString: string, separator: string): Date;
   fromString(dateString: string): Date
 }
 

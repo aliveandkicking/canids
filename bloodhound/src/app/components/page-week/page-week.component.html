@@ -4,21 +4,21 @@
       <img class="button-image" src="../../../assets/white-plus.png">
     </span>
     <span class="caption">
-        {{appweek.getCaption()}}
+        {{plweek.getCaption()}}
     </span>
-    <span class="today-button" (click)="appweek.today()">
+    <span class="today-button" (click)="plweek.today()">
       <span class="today-button-caption">
         Today
       </span>
     </span>
-    <span class="navigation-button" (click)="appweek.prev()">
+    <span class="navigation-button" (click)="plweek.prev()">
       <img class="button-image" src="../../../assets/white-arrow-left.png">
     </span>
-    <span class="navigation-button" (click)="appweek.next()">
+    <span class="navigation-button" (click)="plweek.next()">
       <img class="button-image" src="../../../assets/white-arrow-right.png">
     </span>
   </div>
   <div class="content">
-    <app-week #appweek></app-week>
+    <pl-week [date]="parseDateStr()" #plweek></pl-week>
   </div>
 </div>

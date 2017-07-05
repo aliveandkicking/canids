@@ -39,16 +39,12 @@ export class WeekViewModel {
     return result // biktop
   }
 
-  today () {
-    this._model.setDate(new Date())
+  getNextWeekDate () {
+    return this._model.getNextWeekDate()
   }
 
-  next () {
-    this._model.next()
-  }
-
-  prev () {
-    this._model.prev()
+  getPrevWeekDate () {
+    return this._model.getPrevWeekDate()
   }
 
   getDayViewModel (date) {

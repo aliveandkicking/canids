@@ -13,9 +13,7 @@ export class WeekModel extends BaseModel {
 
   refreshDays () {
 
-
   }
-
 
   initDays () {
     this.getDates().forEach((date, i) => {
@@ -37,17 +35,15 @@ export class WeekModel extends BaseModel {
   }
 
   getEndDate () {
+    return dateUtils.incDay(this.getDate(), dateUtils.DAYS_IN_WEEK - 1)
+  }
+
+  getNextWeekDate () {
     return dateUtils.incDay(this.getDate(), dateUtils.DAYS_IN_WEEK)
   }
 
-  next () {
-    this.setDate(dateUtils.incDay(this.getDate(), dateUtils.DAYS_IN_WEEK))
-    this.initDays()
-  }
-
-  prev () {
-    this.setDate(dateUtils.decDay(this.getDate(), dateUtils.DAYS_IN_WEEK))
-    this.initDays()
+  getPrevWeekDate () {
+    return dateUtils.decDay(this.getDate(), dateUtils.DAYS_IN_WEEK)
   }
 
   getDates () {
